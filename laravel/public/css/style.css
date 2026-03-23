@@ -1,0 +1,816 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+/* =========================
+   PAGE LOGIN (ISOLEE)
+========================= */
+
+body.login-page {
+    background-color: #eaf2ff;
+    min-height: 100vh;
+}
+
+/* Header pleine largeur */
+.login-page .main-header {
+    width: 100%;
+    background-color: #2c7be5;
+}
+
+/* Contenu du header bien aligné */
+.login-page .header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Zone centrale du login */
+.login-page .login-container {
+    max-width: 420px;
+    margin: 5rem auto 0;
+    background-color: rgb(64, 105, 219);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* Titre centré */
+.login-page .login-container h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* Bouton plus élégant */
+.login-page button {
+    border-radius: 10px;
+}
+
+/* Header avec logo + menu */
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo img {
+    height: 50px;
+    object-fit: contain
+}
+
+
+
+
+
+.login-container h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+
+
+label {
+    display: block;
+    margin-bottom: 0.3rem;
+}
+
+input {
+    width: 100%;
+    padding: 0.5rem;
+}
+
+
+
+/* Header principal */
+.main-header {
+    background-color: #2c7be5;
+    padding: 1rem;
+}
+
+.main-header nav {
+    display: flex;
+    gap: 1rem;
+}
+
+.main-header a {
+    color: white;
+    text-decoration: none;
+}
+
+/* Dashboard */
+.dashboard {
+    padding: 2rem;
+}
+
+/* Section statistiques */
+.stats {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+/* Cartes statistiques */
+.card {
+    background-color: #f4f6f8;
+    padding: 1.5rem;
+    border-radius: 6px;
+    width: 150px;
+    text-align: center;
+}
+
+
+/* Tableau */
+
+/* Page tickets */
+.tickets {
+    margin-top: 100px; 
+    padding: 2rem;
+}
+
+/* Tableau des tickets */
+.tickets-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+}
+
+.tickets-table th,
+.tickets-table td {
+    border: 1px solid #ddd;
+    padding: 0.8rem;
+    text-align: left;
+}
+
+.tickets-table th {
+    background-color: #f4f6f8;
+}
+/* Détail du ticket */
+.ticket-detail {
+    padding: 2rem;
+}
+
+.ticket-info p {
+    margin-bottom: 0.5rem;
+}
+
+.ticket-description,
+.ticket-time {
+    margin-top: 2rem;
+    background-color: #f4f6f8;
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+/* =========================
+   PAGE CRÉATION DE TICKET
+========================= */
+
+.ticket-create {
+    padding: 2rem;
+}
+
+/* Titre de la page */
+.ticket-create h1 {
+    margin-bottom: 1.5rem;
+    color: #2c7be5;
+}
+
+/* =========================
+   FORMULAIRE
+========================= */
+
+.ticket-form {
+    width: 50%;
+    max-width: 600px;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Groupe label + champ */
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+/* Labels */
+.form-group label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Champs input, select, textarea */
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.6rem 0.7rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 0.9rem;
+}
+
+/* Focus utilisateur */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #2c7be5;
+}
+
+/* Champ multiple (collaborateurs) */
+.form-group select[multiple] {
+    height: 90px;
+}
+/* =========================
+   PAGE DÉTAIL DU TICKET
+========================= */
+
+.ticket-detail {
+    margin-top: 100px;
+    padding: 2rem;
+    background-color: #eaf2ff;
+    min-height: calc(100vh - 100px);
+}
+
+/* Titre principal */
+.ticket-detail h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+    color: #1e293b;
+}
+
+/* Bloc infos générales */
+.ticket-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 14px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+}
+
+.ticket-info p {
+    background-color: #f8fafc;
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+}
+
+.ticket-info strong {
+    color: #2c7be5;
+}
+
+/* Sections (description / temps) */
+.ticket-description,
+.ticket-time {
+    background-color: white;
+    padding: 1.8rem;
+    border-radius: 14px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+}
+
+/* Titres des sections */
+.ticket-description h2,
+.ticket-time h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: #1e293b;
+    border-left: 4px solid #2c7be5;
+    padding-left: 0.6rem;
+}
+
+/* Texte description */
+.ticket-description p {
+    line-height: 1.6;
+    color: #334155;
+}
+
+/* Temps passé mis en valeur */
+.ticket-time p {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #1e293b;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .ticket-detail {
+        padding: 1rem;
+    }
+}
+
+/* =========================
+   BOUTON
+========================= */
+
+.ticket-form button {
+    width: 100%;
+    padding: 0.8rem;
+    margin-top: 1rem;
+    background-color: #2c7be5;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.ticket-form button:hover {
+    background-color: #1f66c1;
+}
+/* =========================
+   LAYOUT 2 COLONNES
+========================= */
+
+.ticket-layout {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+/* Colonne droite : info */
+.ticket-info-box {
+    width: 50%;
+    max-width: 600px;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+/* Image */
+.ticket-info-box img {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+/* Titre info */
+.ticket-info-box h2 {
+    color: #2c7be5;
+    margin-bottom: 1rem;
+}
+
+/* Texte info */
+.ticket-info-box p {
+    font-size: 0.9rem;
+    color: #333;
+    margin-bottom: 0.8rem;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .ticket-layout {
+        flex-direction: column;
+    }
+
+    .ticket-info-box {
+        max-width: 100%;
+    }
+}
+/* =========================
+   DASHBOARD KPI – TICKETING
+========================= */
+
+.dashboard {
+    background-color: #eaf2ff;
+    min-height: 100vh;
+}
+
+/* KPI */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.kpi-card {
+    background-color: white;
+    padding: 1.2rem;
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.kpi-title {
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.kpi-value {
+    font-size: 1.8rem;
+    color: #2c7be5;
+}
+
+/* Ligne centrale */
+.dashboard-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Panels */
+.panel {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.panel.highlight {
+    background-color: #2ccbc3;
+    color: white;
+}
+
+.big-number {
+    font-size: 3rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Statuts */
+.status-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 30px;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+}
+
+.bar {
+    background-color: #eee;
+    height: 8px;
+    border-radius: 4px;
+}
+
+.bar-fill {
+    height: 100%;
+    border-radius: 4px;
+}
+
+.bar-fill.green { background-color: #22c55e; }
+.bar-fill.blue { background-color: #2c7be5; }
+
+/* Top list */
+.top-list {
+    list-style: none;
+    padding: 0;
+}
+
+.top-list li {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.6rem;
+}
+
+/* Performance */
+.panel.full {
+    margin-top: 2rem;
+}
+
+.fake-chart {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-end;
+    height: 200px;
+    margin-top: 1rem;
+}
+
+.chart-bar {
+    width: 30px;
+    background-color: #2c7be5;
+    border-radius: 4px 4px 0 0;
+}
+
+.chart-legend {
+    margin-top: 0.8rem;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .dashboard-row {
+        grid-template-columns: 1fr;
+    }
+}
+/* Titres des sections dashboard */
+.dashboard h1 {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    color: #1e293b;
+}
+
+.panel h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #1e293b;
+    border-left: 4px solid #2c7be5;
+    padding-left: 0.6rem;
+}
+/* Graphiques combinés */
+.charts-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: center;
+}
+
+.fake-chart.line {
+    height: 200px;
+}
+
+.line-chart {
+    width: 100%;
+    height: 100%;
+}
+
+/* Texte d'analyse */
+.chart-analysis {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    color: #475569;
+    font-style: italic;
+}
+/*/* =========================
+   COMBO CHART (BARRES + LIGNE)
+========================= */
+
+.combo-chart {
+    width: 100%;
+    max-width: 750px;
+    height: auto;
+    margin-top: 1rem;
+}
+
+/* Grille */
+.grid line {
+    stroke: #e5e7eb;
+    stroke-width: 1;
+}
+
+/* Axes */
+.axis text {
+    font-size: 12px;
+    fill: #475569;
+}
+
+/* Barres */
+.bars rect {
+    fill: #2c7be5;
+    opacity: 0.85;
+    rx: 3;
+}
+
+/* Courbe */
+.line.solved {
+    fill: none;
+    stroke: #22c55e;
+    stroke-width: 3;
+}
+
+/* Points */
+.points circle {
+    fill: #22c55e;
+}
+
+/* Légende */
+.legend text {
+    font-size: 12px;
+    fill: #334155;
+}
+
+/* Analyse */
+.chart-analysis {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    color: #475569;
+    font-style: italic;
+}
+.line {
+    fill: none;
+}
+
+/* Page projets – style moderne */
+.page-title {
+    font-size: 1.8rem;
+    margin-bottom: 0.3rem;
+    text-align: center;
+    padding: 0.6rem 1.2rem;
+    border: 2px solid #2c7be5;
+    border-radius: 12px;
+    margin: 0 auto 1rem auto ;
+    display: flex;    justify-content: center;
+    align-items: center;
+
+}
+
+.page-subtitle {
+    color: #64748b;
+    margin-bottom: 2.5rem;
+    text-align: center;
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 2rem;
+}
+
+/* Cartes plus grandes */
+.project-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+    min-height: 240px;
+}
+
+
+/* Header projet */
+.project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.project-header h2 {
+    font-size: 1.2rem;
+}
+
+/* Badges */
+.badge {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px;
+    color: white;
+}
+
+.badge.active {
+    background-color: #22c55e;
+}
+
+.badge.warning {
+    background-color: #f59e0b;
+}
+
+/* Infos projet */
+.project-client,
+.project-collab {
+    font-size: 0.9rem;
+    color: #475569;
+}
+
+/* Heures */
+.hours span {
+    font-size: 0.85rem;
+}
+
+.progress {
+    background: #e5e7eb;
+    border-radius: 999px;
+    height: 8px;
+    overflow: hidden;
+    margin-top: 4px;
+}
+
+.progress-fill {
+    background: #2c7be5;
+    height: 100%;
+}
+
+.progress-fill.danger {
+    background: #ef4444;
+}
+
+/* Actions */
+.project-actions {
+    margin-top: auto;
+}
+
+.btn-link {
+    display: inline-block;
+    margin-top: 0.8rem;
+    text-decoration: none;
+    color: #2c7be5;
+    font-weight: 500;
+}
+#form-message {
+    margin-bottom: 1rem;
+    padding: 0.8rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    display: none;
+}
+
+#form-message.error {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+#form-message.success {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+#form-message.info {
+    background-color: #e0f2fe;
+    color: #075985;
+}
+@media (max-width: 768px) {
+    .ticket-layout {
+        flex-direction: column;
+    }
+
+    .ticket-form,
+    .ticket-info-box {
+        max-width: 100%;
+    }
+}
+/* Champ invalide */
+.input-error {
+    border: 2px solid #dc2626;
+    background-color: #fee2e2;
+}
+
+/* Champ valide */
+.input-success {
+    border: 2px solid #16a34a;
+}
+
+
+
+/* Profil menu */
+.profile-menu {
+    position: relative;
+}
+
+/* Avatar */
+.profile-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid white;
+}
+
+/* Menu déroulant */
+.profile-dropdown {
+    position: absolute;
+    right: 0;
+    top: 50px;
+    width: 220px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    padding: 0.8rem;
+    display: none;
+    z-index: 2000;
+}
+
+/* Infos utilisateur */
+.profile-info {
+    margin-bottom: 0.6rem;
+}
+
+.profile-info span {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+/* Liens */
+.profile-dropdown a {
+    display: block;
+    padding: 0.5rem;
+    text-decoration: none;
+    color: #1e293b;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.profile-dropdown a:hover {
+    background-color: #f1f5f9;
+}
+
+.profile-dropdown .logout {
+    color: #dc2626;
+}
+
+/* Séparateur */
+.profile-dropdown hr {
+    border: none;
+    border-top: 1px solid #e5e7eb;
+    margin: 0.4rem 0;
+}
