@@ -21,3 +21,6 @@ Route::get('/projects', function () {
 use App\Http\Controllers\TicketController;
 
 Route::resource('tickets', TicketController::class);
+use App\Http\Controllers\DashboardController;
+
+Route::get('/dashboard', [DashboardController::class, 'index']);
