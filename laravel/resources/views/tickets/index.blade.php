@@ -2,43 +2,50 @@
 
 @section('content')
 
-<div class="tickets">
+<div class="tickets" style="width:100%; padding:2rem;">
 
-<h1>Liste des tickets</h1>
+    <div class="tickets-header">
+        <h1 class="tickets-title">Gestion des tickets</h1>
+    </div>
 
-<a href="/tickets/create">Créer un ticket</a>
+    <table class="tickets-table">
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Statut</th>
+                <th>Type</th>
+                <th>Action</th>
+            </tr>
+        </thead>
 
-<table class="tickets-table">
+        <tbody>
 
-<tr>
-    <th>Titre</th>
-    <th>Heures prévues</th>
-    <th>Heures utilisées</th>
-    <th>Restantes</th>
-    <th>Facturables</th>
-    <th>Actions</th>
-</tr>
+        @if($tickets->isEmpty())
+            <tr>
+                <td colspan="4">Aucun ticket créé pour le moment.</td>
+            </tr>
+        @else
 
-@foreach($tickets as $ticket)
-<tr>
-    <td>{{ $ticket->title }}</td>
-    <td>{{ $ticket->hours_estimated }}</td>
-    <td>{{ $ticket->hours_spent }}</td>
-    <td>{{ $ticket->remaining_hours }}</td>
-    <td>{{ $ticket->billable_hours }}</td>
-    <td>
-        <a href="/tickets/{{ $ticket->id }}/edit">Modifier</a>
+            @foreach($tickets as $ticket)
+                <tr>
+                    <td>{{ $ticket->title }}</td>
+                    <td>{{ $ticket->status }}</td>
+                    <td>{{ $ticket->type }}</td>
+                    <td>{{ $ticket->remaining_hours }} h</td>
+                    <td>{{ $ticket->billable_hours }} h</td>
+                    <td>
+                        <a href="/tickets/{{ $ticket->id }}">
+                            Voir détail
+                        </a>
+                        <a href="/tickets/{{ $ticket->id }}/edit">Modifier</a>
+                    </td>
+                </tr>
+            @endforeach
 
-        <form action="/tickets/{{ $ticket->id }}" method="POST">
-            @csrf
-            @method('DELETE')
-            <button type="submit">Supprimer</button>
-        </form>
-    </td>
-</tr>
-@endforeach
+        @endif
 
-</table>
+        </tbody>
+    </table>
 
 </div>
 

@@ -9,6 +9,7 @@ class Ticket extends Model
     protected $fillable = [
     'title',
     'description',
+    'status',
     'hours_estimated',
     'hours_spent'
 ];
