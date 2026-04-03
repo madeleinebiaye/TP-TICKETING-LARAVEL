@@ -2,7 +2,7 @@
 
 @section('content')
 
-<main class="dashboard">
+<main class="dashboard" style="margin-top: 100px; width: 100%;">
 
     <div class="dashboard-title-wrapper">
         <h1 class="dashboard-title">
@@ -15,28 +15,28 @@
 
         <div class="kpi-card">
             <span>Total tickets</span>
-            <div class="kpi-value">
+            <div style="font-size:2rem;font-weight:bold;">
                 {{ $totalTickets }}
             </div>
         </div>
 
         <div class="kpi-card">
             <span>Nouveaux</span>
-            <div class="kpi-value">
+            <div style="font-size:2rem;font-weight:bold;">
                 {{ $nbNouveau }}
             </div>
         </div>
 
         <div class="kpi-card">
             <span>En cours</span>
-            <div class="kpi-value">
+            <div style="font-size:2rem;font-weight:bold;">
                 {{ $nbEnCours }}
             </div>
         </div>
 
         <div class="kpi-card">
             <span>Terminés</span>
-            <div class="kpi-value">
+            <div style="font-size:2rem;font-weight:bold;">
                 {{ $nbTermine }}
             </div>
         </div>
@@ -45,11 +45,13 @@
 
     <section class="dashboard-row">
 
+        <!-- Bloc gauche -->
         <div class="panel highlight">
             <h3>Tickets créés</h3>
             <p class="big-number">{{ $totalTickets }}</p>
         </div>
 
+        <!-- Bloc centre -->
         <div class="panel">
             <h3>Statut des tickets</h3>
 
@@ -57,8 +59,7 @@
                 <span>Nouveaux</span>
                 <div class="bar">
                     <div class="bar-fill green"
-                        style="width: {{ $totalTickets > 0 ? ($nbNouveau / $totalTickets) * 100 : 0 }}%">
-                    </div>
+                         style="width: {{ $totalTickets > 0 ? ($nbNouveau / $totalTickets) * 100 : 0 }}%"></div>
                 </div>
                 <span>{{ $nbNouveau }}</span>
             </div>
@@ -67,14 +68,14 @@
                 <span>En cours</span>
                 <div class="bar">
                     <div class="bar-fill blue"
-                        style="width: {{ $totalTickets > 0 ? ($nbEnCours / $totalTickets) * 100 : 0 }}%">
-                    </div>
+                         style="width: {{ $totalTickets > 0 ? ($nbEnCours / $totalTickets) * 100 : 0 }}%"></div>
                 </div>
                 <span>{{ $nbEnCours }}</span>
             </div>
 
         </div>
 
+        <!-- Bloc droite -->
         <div class="panel">
             <h3>Résumé</h3>
             <ul class="top-list">

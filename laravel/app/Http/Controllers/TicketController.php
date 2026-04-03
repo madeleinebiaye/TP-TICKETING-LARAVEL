@@ -21,22 +21,23 @@ class TicketController extends Controller
     }
 
     // 💾 Enregistrer un ticket
-    public function store(Request $request)
-    {
-        $request->validate([
-            'title' => 'required'
-        ]);
+   public function store(Request $request)
+{
+    $request->validate([
+        'title' => 'required',
+        'description' => 'required'
+    ]);
 
-        Ticket::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'status' => 'ouvert',
-            'hours_estimated' => 0,
-            'hours_spent' => 0
-        ]);
+    Ticket::create([
+        'title' => $request->title,
+        'description' => $request->description,
+        'status' => $request->status, // 🔥 IMPORTANT
+        'hours_estimated' => $request->estimated_time ?? 0,
+        'hours_spent' => $request->spent_time ?? 0
+    ]);
 
-        return redirect('/tickets')->with('success', 'Ticket créé avec succès');
-    }
+    return redirect('/tickets')->with('success', 'Ticket créé');
+}
 
     // 🔍 Voir détail d’un ticket
     public function show($id)
