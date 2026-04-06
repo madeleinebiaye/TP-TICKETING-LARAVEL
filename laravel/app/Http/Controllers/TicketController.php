@@ -8,6 +8,11 @@ use App\Models\Ticket;
 
 class TicketController extends Controller
 {
+    private function normalizeStatus(string $status): string
+    {
+        return $status === 'ouvert' ? 'Nouveau' : $status;
+    }
+
     // 📄 Afficher tous les tickets
     public function index()
     {
@@ -23,12 +28,12 @@ class TicketController extends Controller
     }
 
     // 💾 Enregistrer un ticket
-   public function store(Request $request)
+    public function store(Request $request)
 {
     $validated = $request->validate([
         'title' => 'required|string|max:255',
         'description' => 'required|string',
-        'status' => 'required|in:Nouveau,En cours,Terminé',
+        'status' => 'required|in:Nouveau,En cours,Terminé,ouvert',
         'type' => 'required|in:Inclus,Facturable',
         'priority' => 'nullable|in:Basse,Moyenne,Haute',
         'estimated_time' => 'nullable|integer|min:0',
@@ -41,7 +46,7 @@ class TicketController extends Controller
     Ticket::create([
         'title' => $validated['title'],
         'description' => $validated['description'],
-        'status' => $validated['status'],
+        'status' => $this->normalizeStatus($validated['status']),
         'type' => $validated['type'],
         'priority' => $validated['priority'] ?? null,
         'hours_estimated' => $validated['estimated_time'] ?? 0,
@@ -74,7 +79,7 @@ class TicketController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'status' => 'required|in:Nouveau,En cours,Terminé',
+            'status' => 'required|in:Nouveau,En cours,Terminé,ouvert',
             'type' => 'required|in:Inclus,Facturable',
             'priority' => 'nullable|in:Basse,Moyenne,Haute',
             'hours_estimated' => 'nullable|integer|min:0',
@@ -89,7 +94,7 @@ class TicketController extends Controller
         $ticket->update([
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
-            'status' => $validated['status'],
+            'status' => $this->normalizeStatus($validated['status']),
             'type' => $validated['type'],
             'priority' => $validated['priority'] ?? null,
             'hours_estimated' => $validated['hours_estimated'] ?? 0,

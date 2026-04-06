@@ -22,6 +22,8 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('forgot-password');
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+Route::get('/reset-password/{token}', [AuthController::class, 'showResetPassword'])->name('password.reset');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 
 /*
 |--------------------------------------------------------------------------
@@ -50,7 +52,7 @@ Route::get('/accueil', function () {
         $stats = [
             'totalProjects' => Project::count(),
             'totalTickets' => Ticket::count(),
-            'openTickets' => Ticket::where('status', 'En cours')->count(),
+            'openTickets' => Ticket::whereIn('status', ['Nouveau', 'En cours', 'ouvert'])->count(),
             'totalClients' => Client::count(),
         ];
     } catch (\Throwable $exception) {

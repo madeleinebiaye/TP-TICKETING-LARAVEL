@@ -30,7 +30,7 @@ class DashboardController extends Controller
             ->orderBy('name')
             ->first();
 
-        $nbNouveau = Ticket::where('status', 'Nouveau')->count();
+        $nbNouveau = Ticket::whereIn('status', ['Nouveau', 'ouvert'])->count();
         $nbEnCours = Ticket::where('status', 'En cours')->count();
         $nbTermine = Ticket::where('status', 'Terminé')->count();
 

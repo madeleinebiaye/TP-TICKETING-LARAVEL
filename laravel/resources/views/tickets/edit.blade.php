@@ -21,6 +21,9 @@
             <option value="Nouveau" {{ $ticket->status === 'Nouveau' ? 'selected' : '' }}>Nouveau</option>
             <option value="En cours" {{ $ticket->status === 'En cours' ? 'selected' : '' }}>En cours</option>
             <option value="Terminé" {{ $ticket->status === 'Terminé' ? 'selected' : '' }}>Terminé</option>
+            @if($ticket->status === 'ouvert')
+                <option value="ouvert" selected>Ouvert (ancien)</option>
+            @endif
         </select><br><br>
 
         <label for="type">Type</label><br>
