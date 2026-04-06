@@ -59,6 +59,7 @@ class AuthController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => $validated['password'],
+            'role' => 'collaborateur',
         ]);
 
         Auth::login($user);

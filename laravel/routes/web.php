@@ -66,14 +66,14 @@ Route::get('/accueil', function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth');
 
 // Clients
-Route::resource('clients', ClientController::class)->middleware('auth');
+Route::resource('clients', ClientController::class)->middleware(['auth', 'role:admin,collaborateur']);
 
 /*
 |--------------------------------------------------------------------------
 | Projects (CRUD)
 |--------------------------------------------------------------------------
 */
-Route::resource('projects', ProjectController::class)->middleware('auth');
+Route::resource('projects', ProjectController::class)->middleware(['auth', 'role:admin,collaborateur']);
 
 /*
 |--------------------------------------------------------------------------
@@ -81,4 +81,4 @@ Route::resource('projects', ProjectController::class)->middleware('auth');
 |--------------------------------------------------------------------------
 */
 
-Route::resource('tickets', TicketController::class)->middleware('auth');
+Route::resource('tickets', TicketController::class)->middleware(['auth', 'role:admin,collaborateur']);
