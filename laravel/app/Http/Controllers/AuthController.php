@@ -2,40 +2,60 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    // Afficher la page login
-    public function showLogin()
+    public function showLogin(): View
     {
         return view('auth.login');
     }
 
-    // Traiter le login
-    public function login(Request $request)
+    public function login(Request $request): RedirectResponse
     {
-        // Validation
         $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
+            'email'    => 'required|email',
+            'password' => 'required',
         ]);
 
-        // Vérifier utilisateur
         $user = User::where('email', $request->email)->first();
 
         if ($user && Hash::check($request->password, $user->password)) {
-
             session([
-                'user_id' => $user->id,
-                'user_email' => $user->email
+                'user_id'    => $user->id,
+                'user_name'  => $user->name,
+                'user_email' => $user->email,
             ]);
 
             return redirect('/dashboard');
         }
 
         return back()->with('error', 'Email ou mot de passe incorrect.');
+    }
+
+    public function logout(Request $request): RedirectResponse
+    {
+        $request->session()->flush();
+
+        return redirect('/login');
+    }
+
+    public function showForgotPassword(): View
+    {
+        return view('auth.forgot-password');
+    }
+
+    public function forgotPassword(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        // Simulation: en production, envoyer un vrai email de réinitialisation
+        return back()->with('success', 'Si ce compte existe, un email de réinitialisation a été envoyé.');
     }
 }

@@ -2,29 +2,84 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Project;
+use App\Models\Client;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class ProjectController extends Controller
 {
-    public function create()
+    public function index(): View
     {
-        return view('projects.create');
+        $projects = Project::all();
+
+        return view('projects.index', compact('projects'));
     }
 
-    public function store(Request $request)
+    public function create(): View
     {
-        $request->validate([
-            'title' => 'required',
-            'description' => 'required'
+        $clients = Client::orderBy('name')->get();
+
+        return view('projects.create', compact('clients'));
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'title'       => 'required|string|max:255',
+            'description' => 'required|string',
+            'client_id'   => 'nullable|exists:clients,id',
         ]);
 
         Project::create([
-            'name' => $request->title,
-            'description' => $request->description,
-            'client_id' => 1
+            'name'        => $validated['title'],
+            'description' => $validated['description'],
+            'client_id'   => $validated['client_id'] ?? null,
         ]);
 
         return redirect('/projects')->with('success', 'Projet créé');
+    }
+
+    public function show(int $id): View
+    {
+        $project = Project::with('tickets')->findOrFail($id);
+
+        return view('projects.show', compact('project'));
+    }
+
+    public function edit(int $id): View
+    {
+        $project = Project::findOrFail($id);
+        $clients  = Client::orderBy('name')->get();
+
+        return view('projects.edit', compact('project', 'clients'));
+    }
+
+    public function update(Request $request, int $id): RedirectResponse
+    {
+        $validated = $request->validate([
+            'title'       => 'required|string|max:255',
+            'description' => 'required|string',
+            'client_id'   => 'nullable|exists:clients,id',
+        ]);
+
+        $project = Project::findOrFail($id);
+
+        $project->update([
+            'name'        => $validated['title'],
+            'description' => $validated['description'],
+            'client_id'   => $validated['client_id'] ?? null,
+        ]);
+
+        return redirect('/projects')->with('success', 'Projet modifié');
+    }
+
+    public function destroy(int $id): RedirectResponse
+    {
+        $project = Project::findOrFail($id);
+        $project->delete();
+
+        return redirect('/projects')->with('success', 'Projet supprimé');
     }
 }

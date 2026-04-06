@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Project;
 use App\Models\Ticket;
 
 class TicketController extends Controller
@@ -10,30 +11,43 @@ class TicketController extends Controller
     // 📄 Afficher tous les tickets
     public function index()
     {
-        $tickets = Ticket::orderBy('id', 'desc')->get();
+        $tickets = Ticket::with('project')->orderBy('id', 'desc')->get();
         return view('tickets.index', compact('tickets'));
     }
 
     // 📄 Formulaire de création
     public function create()
     {
-        return view('tickets.create');
+        $projects = Project::orderBy('name')->get();
+        return view('tickets.create', compact('projects'));
     }
 
     // 💾 Enregistrer un ticket
    public function store(Request $request)
 {
-    $request->validate([
-        'title' => 'required',
-        'description' => 'required'
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'required|string',
+        'status' => 'required|in:Nouveau,En cours,Terminé',
+        'type' => 'required|in:Inclus,Facturable',
+        'priority' => 'nullable|in:Basse,Moyenne,Haute',
+        'estimated_time' => 'nullable|integer|min:0',
+        'spent_time' => 'nullable|integer|min:0',
+        'project_id' => 'nullable|exists:projects,id',
+        'collaborators' => 'nullable|array',
+        'collaborators.*' => 'string|max:255',
     ]);
 
     Ticket::create([
-        'title' => $request->title,
-        'description' => $request->description,
-        'status' => $request->status, // 🔥 IMPORTANT
-        'hours_estimated' => $request->estimated_time ?? 0,
-        'hours_spent' => $request->spent_time ?? 0
+        'title' => $validated['title'],
+        'description' => $validated['description'],
+        'status' => $validated['status'],
+        'type' => $validated['type'],
+        'priority' => $validated['priority'] ?? null,
+        'hours_estimated' => $validated['estimated_time'] ?? 0,
+        'hours_spent' => $validated['spent_time'] ?? 0,
+        'project_id' => $validated['project_id'] ?? null,
+        'collaborators' => $validated['collaborators'] ?? null,
     ]);
 
     return redirect('/tickets')->with('success', 'Ticket créé');
@@ -42,7 +56,7 @@ class TicketController extends Controller
     // 🔍 Voir détail d’un ticket
     public function show($id)
     {
-        $ticket = Ticket::findOrFail($id);
+        $ticket = Ticket::with('project')->findOrFail($id);
         return view('tickets.show', compact('ticket'));
     }
 
@@ -50,24 +64,38 @@ class TicketController extends Controller
     public function edit($id)
     {
         $ticket = Ticket::findOrFail($id);
-        return view('tickets.edit', compact('ticket'));
+        $projects = Project::orderBy('name')->get();
+        return view('tickets.edit', compact('ticket', 'projects'));
     }
 
     // 💾 Mise à jour
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'title' => 'required'
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'status' => 'required|in:Nouveau,En cours,Terminé',
+            'type' => 'required|in:Inclus,Facturable',
+            'priority' => 'nullable|in:Basse,Moyenne,Haute',
+            'hours_estimated' => 'nullable|integer|min:0',
+            'hours_spent' => 'nullable|integer|min:0',
+            'project_id' => 'nullable|exists:projects,id',
+            'collaborators' => 'nullable|array',
+            'collaborators.*' => 'string|max:255',
         ]);
 
         $ticket = Ticket::findOrFail($id);
 
         $ticket->update([
-            'title' => $request->title,
-            'description' => $request->description,
-            'status' => $request->status,
-            'hours_estimated' => $request->hours_estimated,
-            'hours_spent' => $request->hours_spent
+            'title' => $validated['title'],
+            'description' => $validated['description'] ?? null,
+            'status' => $validated['status'],
+            'type' => $validated['type'],
+            'priority' => $validated['priority'] ?? null,
+            'hours_estimated' => $validated['hours_estimated'] ?? 0,
+            'hours_spent' => $validated['hours_spent'] ?? 0,
+            'project_id' => $validated['project_id'] ?? null,
+            'collaborators' => $validated['collaborators'] ?? null,
         ]);
 
         return redirect('/tickets')->with('success', 'Ticket modifié');

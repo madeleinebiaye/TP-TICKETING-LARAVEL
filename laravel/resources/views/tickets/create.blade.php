@@ -40,7 +40,7 @@
             <!-- STATUT -->
             <div class="form-group">
                 <label for="status">Statut</label>
-                <select name="status">
+                <select id="status" name="status" required>
                    <option>Nouveau</option>
                    <option>En cours</option>
                    <option>Terminé</option>
@@ -51,6 +51,7 @@
             <div class="form-group">
                 <label for="priority">Priorité</label>
                 <select id="priority" name="priority">
+                    <option value="">Aucune</option>
                     <option>Basse</option>
                     <option>Moyenne</option>
                     <option>Haute</option>
@@ -60,9 +61,20 @@
             <!-- TYPE -->
             <div class="form-group">
                 <label for="type">Type</label>
-                <select id="type" name="type">
+                <select id="type" name="type" required>
                     <option>Inclus</option>
                     <option>Facturable</option>
+                </select>
+            </div>
+
+            <!-- PROJET -->
+            <div class="form-group">
+                <label for="project_id">Projet</label>
+                <select id="project_id" name="project_id">
+                    <option value="">Aucun</option>
+                    @foreach($projects as $project)
+                        <option value="{{ $project->id }}">{{ $project->name }}</option>
+                    @endforeach
                 </select>
             </div>
 

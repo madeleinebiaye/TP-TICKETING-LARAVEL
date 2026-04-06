@@ -26,9 +26,6 @@
             <a href="/tickets">Tickets</a>
             <a href="/tickets/create">Créer un ticket</a>
             <a href="/projects/create">Créer un projet</a>
-            <a href="/profile">Profil</a>
-            <a href="/settings">Paramètres</a>
-            <a href="/">Déconnexion</a>
         </nav>
 
     </div>

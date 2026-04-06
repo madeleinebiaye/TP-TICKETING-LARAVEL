@@ -14,6 +14,10 @@
                 <th>Titre</th>
                 <th>Statut</th>
                 <th>Type</th>
+                <th>Projet</th>
+                <th>Priorité</th>
+                <th>Restantes</th>
+                <th>Facturables</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -22,7 +26,7 @@
 
         @if($tickets->isEmpty())
             <tr>
-                <td colspan="4">Aucun ticket créé pour le moment.</td>
+                <td colspan="8">Aucun ticket créé pour le moment.</td>
             </tr>
         @else
 
@@ -31,6 +35,8 @@
                     <td>{{ $ticket->title }}</td>
                     <td>{{ $ticket->status }}</td>
                     <td>{{ $ticket->type }}</td>
+                    <td>{{ optional($ticket->project)->name ?? 'Aucun' }}</td>
+                    <td>{{ $ticket->priority ?? 'Aucune' }}</td>
                     <td>{{ $ticket->remaining_hours }} h</td>
                     <td>{{ $ticket->billable_hours }} h</td>
                     <td>
