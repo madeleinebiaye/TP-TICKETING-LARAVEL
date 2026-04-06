@@ -208,6 +208,35 @@ input {
     background: linear-gradient(180deg, #2c7be5 0%, #1849a9 100%);
 }
 
+.home-hero-visual {
+    position: relative;
+    min-height: 230px;
+    padding: 1rem;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%);
+    overflow: hidden;
+}
+
+.home-hero-visual img {
+    width: 100%;
+    max-width: 260px;
+    display: block;
+    margin: 0 auto;
+    filter: drop-shadow(0 18px 28px rgba(10, 37, 88, 0.35));
+}
+
+.home-hero-badge {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    padding: 0.55rem 0.85rem;
+    border-radius: 999px;
+    background-color: #ffffff;
+    color: #1849a9;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
 .home-hero-card {
     padding: 1.4rem;
     border-radius: 14px;
@@ -303,6 +332,10 @@ input {
     .home-hero-copy h1 {
         max-width: none;
         font-size: 2.2rem;
+    }
+
+    .home-hero-visual {
+        min-height: 180px;
     }
 }
 

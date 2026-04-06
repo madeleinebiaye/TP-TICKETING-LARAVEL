@@ -41,7 +41,7 @@ class AuthController extends Controller
     {
         $request->session()->flush();
 
-        return redirect('/login');
+        return redirect('/');
     }
 
     public function showForgotPassword(): View

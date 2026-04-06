@@ -20,6 +20,11 @@
 		</div>
 
 		<div class="home-hero-panel">
+			<div class="home-hero-visual">
+				<img src="{{ asset('assets/ticket-illustration.png') }}" alt="Illustration de ticketing">
+				<div class="home-hero-badge">Suivi en temps réel</div>
+			</div>
+
 			<div class="home-hero-card home-hero-card-accent">
 				<span class="home-metric-label">Projets</span>
 				<strong>{{ $totalProjects }}</strong>
