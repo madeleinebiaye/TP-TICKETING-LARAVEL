@@ -94,11 +94,32 @@ input {
 .main-header nav {
     display: flex;
     gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 .main-header a {
     color: white;
     text-decoration: none;
+}
+
+.nav-logout-form {
+    margin: 0;
+}
+
+.nav-logout-button {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    color: white;
+    padding: 0.45rem 0.85rem;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    line-height: 1;
+}
+
+.nav-logout-button:hover {
+    background-color: rgba(255, 255, 255, 0.14);
 }
 
 /* Dashboard */
@@ -227,6 +248,23 @@ input {
 /* Champ multiple (collaborateurs) */
 .form-group select[multiple] {
     height: 90px;
+}
+
+.form-alert {
+    margin-bottom: 1rem;
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+.form-alert-error {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.form-alert-success {
+    background-color: #dcfce7;
+    color: #166534;
 }
 /* =========================
    PAGE DÉTAIL DU TICKET
@@ -472,6 +510,16 @@ input {
     display: flex;
     justify-content: space-between;
     margin-bottom: 0.6rem;
+}
+
+.dashboard-project-link {
+    color: #2c7be5;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.dashboard-project-link:hover {
+    text-decoration: underline;
 }
 
 /* Performance */

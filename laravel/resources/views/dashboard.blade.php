@@ -126,7 +126,9 @@
                     @foreach($latestProjects as $project)
                         <li>
                             <span>
-                                {{ $project->name }}
+                                <a href="/projects/{{ $project->id }}" class="dashboard-project-link">
+                                    {{ $project->name }}
+                                </a>
                                 @if($project->client)
                                     - {{ $project->client->name }}
                                 @endif
