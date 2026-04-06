@@ -41,6 +41,20 @@
             </div>
         </div>
 
+        <div class="kpi-card">
+            <span>Total clients</span>
+            <div style="font-size:2rem;font-weight:bold;">
+                {{ $totalClients }}
+            </div>
+        </div>
+
+        <div class="kpi-card">
+            <span>Clients avec projets</span>
+            <div style="font-size:2rem;font-weight:bold;">
+                {{ $clientsWithProjects }}
+            </div>
+        </div>
+
     </section>
 
     <section class="dashboard-row">
@@ -83,7 +97,45 @@
                 <li>Projets actifs <span>{{ $activeProjects }}</span></li>
                 <li>Sans ticket <span>{{ $projectsWithoutTickets }}</span></li>
                 <li>Créés ce mois <span>{{ $projectsThisMonth }}</span></li>
+                <li>Clients actifs <span>{{ $clientsWithProjects }}</span></li>
+                <li>Top client <span>{{ $topClient?->name ?? 'Aucun' }}</span></li>
             </ul>
+        </div>
+
+    </section>
+
+    <section class="dashboard-row">
+
+        <div class="panel">
+            <h3>Statistiques clients</h3>
+            <ul class="top-list">
+                <li>Total clients <span>{{ $totalClients }}</span></li>
+                <li>Clients avec projets <span>{{ $clientsWithProjects }}</span></li>
+                <li>Clients sans projet <span>{{ $totalClients - $clientsWithProjects }}</span></li>
+                <li>Client le plus actif <span>{{ $topClient?->name ?? 'Aucun' }}</span></li>
+            </ul>
+        </div>
+
+        <div class="panel" style="grid-column: span 2;">
+            <h3>Derniers projets créés</h3>
+
+            @if($latestProjects->isEmpty())
+                <p>Aucun projet créé pour le moment.</p>
+            @else
+                <ul class="top-list">
+                    @foreach($latestProjects as $project)
+                        <li>
+                            <span>
+                                {{ $project->name }}
+                                @if($project->client)
+                                    - {{ $project->client->name }}
+                                @endif
+                            </span>
+                            <span>{{ $project->tickets_count }} ticket(s)</span>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
         </div>
 
     </section>
