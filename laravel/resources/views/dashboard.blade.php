@@ -21,23 +21,23 @@
         </div>
 
         <div class="kpi-card">
-            <span>Nouveaux</span>
+            <span>Total projets</span>
             <div style="font-size:2rem;font-weight:bold;">
-                {{ $nbNouveau }}
+                {{ $totalProjects }}
             </div>
         </div>
 
         <div class="kpi-card">
-            <span>En cours</span>
+            <span>Projets créés ce mois</span>
             <div style="font-size:2rem;font-weight:bold;">
-                {{ $nbEnCours }}
+                {{ $projectsThisMonth }}
             </div>
         </div>
 
         <div class="kpi-card">
-            <span>Terminés</span>
+            <span>Projets actifs</span>
             <div style="font-size:2rem;font-weight:bold;">
-                {{ $nbTermine }}
+                {{ $activeProjects }}
             </div>
         </div>
 
@@ -47,8 +47,8 @@
 
         <!-- Bloc gauche -->
         <div class="panel highlight">
-            <h3>Tickets créés</h3>
-            <p class="big-number">{{ $totalTickets }}</p>
+            <h3>Projets créés</h3>
+            <p class="big-number">{{ $totalProjects }}</p>
         </div>
 
         <!-- Bloc centre -->
@@ -77,11 +77,12 @@
 
         <!-- Bloc droite -->
         <div class="panel">
-            <h3>Résumé</h3>
+            <h3>Résumé projets</h3>
             <ul class="top-list">
-                <li>Total tickets <span>{{ $totalTickets }}</span></li>
-                <li>En cours <span>{{ $nbEnCours }}</span></li>
-                <li>Terminés <span>{{ $nbTermine }}</span></li>
+                <li>Total projets <span>{{ $totalProjects }}</span></li>
+                <li>Projets actifs <span>{{ $activeProjects }}</span></li>
+                <li>Sans ticket <span>{{ $projectsWithoutTickets }}</span></li>
+                <li>Créés ce mois <span>{{ $projectsThisMonth }}</span></li>
             </ul>
         </div>
 
