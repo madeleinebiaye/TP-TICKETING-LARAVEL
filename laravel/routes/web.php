@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use App\Models\Project;
 use App\Models\Ticket;
 
@@ -82,3 +83,12 @@ Route::resource('projects', ProjectController::class)->middleware(['auth', 'role
 */
 
 Route::resource('tickets', TicketController::class)->middleware(['auth', 'role:admin,collaborateur']);
+
+/*
+|--------------------------------------------------------------------------
+| Users (Admin)
+|--------------------------------------------------------------------------
+*/
+Route::resource('users', UserController::class)
+    ->only(['index', 'update'])
+    ->middleware(['auth', 'role:admin']);
