@@ -7,6 +7,7 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -41,7 +42,25 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect('/accueil');
+            return redirect()->intended('/accueil');
+        }
+
+        $user = User::where('email', $credentials['email'])->first();
+
+        if ($user) {
+            $isLegacyPlain = hash_equals((string) $user->password, (string) $credentials['password']);
+            $isLegacyMd5 = hash_equals((string) $user->password, md5((string) $credentials['password']));
+
+            if ($isLegacyPlain || $isLegacyMd5) {
+                // Upgrade legacy password format to Laravel hash on first successful login.
+                $user->password = $credentials['password'];
+                $user->save();
+
+                Auth::login($user);
+                $request->session()->regenerate();
+
+                return redirect()->intended('/accueil');
+            }
         }
 
         return back()->with('error', 'Email ou mot de passe incorrect.');
