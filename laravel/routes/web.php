@@ -1,11 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Client;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\AuthController;
+use App\Models\Project;
+use App\Models\Ticket;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +29,12 @@ Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 
 // Accueil
 Route::get('/', function () {
-    return view('home');
+    return view('home', [
+        'totalProjects' => Project::count(),
+        'totalTickets' => Ticket::count(),
+        'openTickets' => Ticket::where('status', 'En cours')->count(),
+        'totalClients' => Client::count(),
+    ]);
 });
 
 // Dashboard

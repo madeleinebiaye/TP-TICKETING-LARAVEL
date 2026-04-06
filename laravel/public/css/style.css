@@ -122,6 +122,190 @@ input {
     background-color: rgba(255, 255, 255, 0.14);
 }
 
+/* Accueil */
+.home-page {
+    width: 100%;
+    padding: 2.5rem;
+}
+
+.home-hero {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.home-hero-copy,
+.home-hero-panel,
+.home-stat-card,
+.home-feature-card {
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(28, 58, 122, 0.08);
+}
+
+.home-hero-copy {
+    padding: 2.5rem;
+    background: linear-gradient(135deg, #ffffff 0%, #dcecff 100%);
+}
+
+.home-kicker {
+    display: inline-block;
+    margin-bottom: 1rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    background-color: #dbeafe;
+    color: #1d4ed8;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.home-hero-copy h1 {
+    max-width: 12ch;
+    margin-bottom: 1rem;
+    color: #102a43;
+    font-size: 3rem;
+    line-height: 1.05;
+}
+
+.home-hero-copy p {
+    max-width: 60ch;
+    color: #486581;
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
+
+.home-actions {
+    display: flex;
+    gap: 0.9rem;
+    margin-top: 1.8rem;
+    flex-wrap: wrap;
+}
+
+.home-button {
+    padding: 0.9rem 1.2rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.home-button-primary {
+    background-color: #2c7be5;
+    color: #ffffff;
+}
+
+.home-button-secondary {
+    background-color: #eff6ff;
+    color: #1d4ed8;
+}
+
+.home-hero-panel {
+    display: grid;
+    gap: 1rem;
+    padding: 1rem;
+    background: linear-gradient(180deg, #2c7be5 0%, #1849a9 100%);
+}
+
+.home-hero-card {
+    padding: 1.4rem;
+    border-radius: 14px;
+    background-color: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+}
+
+.home-hero-card-accent {
+    background-color: rgba(255, 255, 255, 0.22);
+}
+
+.home-metric-label {
+    display: block;
+    margin-bottom: 0.6rem;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.home-hero-card strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 2.3rem;
+}
+
+.home-hero-card p {
+    line-height: 1.6;
+}
+
+.home-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.home-stat-card {
+    padding: 1.5rem;
+}
+
+.home-stat-card span {
+    display: block;
+    color: #486581;
+    margin-bottom: 0.6rem;
+}
+
+.home-stat-card strong {
+    color: #102a43;
+    font-size: 2rem;
+}
+
+.home-sections-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.home-feature-card {
+    padding: 1.6rem;
+}
+
+.home-feature-card h2 {
+    margin-bottom: 0.8rem;
+    color: #102a43;
+}
+
+.home-feature-card p {
+    margin-bottom: 1rem;
+    color: #486581;
+    line-height: 1.6;
+}
+
+.home-feature-card a {
+    color: #2c7be5;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.home-feature-card a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+    .home-hero,
+    .home-stats-grid,
+    .home-sections-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .home-page {
+        padding: 1rem;
+    }
+
+    .home-hero-copy h1 {
+        max-width: none;
+        font-size: 2.2rem;
+    }
+}
+
 /* Dashboard */
 .dashboard {
     padding: 2rem;
