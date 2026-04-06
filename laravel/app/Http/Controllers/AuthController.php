@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
     public function showLogin(): View|RedirectResponse
     {
-        if (session()->has('user_id')) {
+        if (Auth::check()) {
             return redirect('/accueil');
         }
 
@@ -21,7 +21,7 @@ class AuthController extends Controller
 
     public function showRegister(): View|RedirectResponse
     {
-        if (session()->has('user_id')) {
+        if (Auth::check()) {
             return redirect('/accueil');
         }
 
@@ -30,19 +30,13 @@ class AuthController extends Controller
 
     public function login(Request $request): RedirectResponse
     {
-        $request->validate([
+        $credentials = $request->validate([
             'email'    => 'required|email',
             'password' => 'required',
         ]);
 
-        $user = User::where('email', $request->email)->first();
-
-        if ($user && Hash::check($request->password, $user->password)) {
-            session([
-                'user_id'    => $user->id,
-                'user_name'  => $user->name,
-                'user_email' => $user->email,
-            ]);
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
 
             return redirect('/accueil');
         }
@@ -58,24 +52,33 @@ class AuthController extends Controller
             'password' => 'required|string|min:6|confirmed',
         ]);
 
-        User::create([
+        $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
+            'password' => $validated['password'],
         ]);
 
-        return redirect('/login')->with('success', 'Compte créé avec succès. Vous pouvez maintenant vous connecter.');
+        Auth::login($user);
+        $request->session()->regenerate();
+
+        return redirect('/accueil')->with('success', 'Compte créé avec succès.');
     }
 
     public function logout(Request $request): RedirectResponse
     {
-        $request->session()->flush();
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return redirect('/');
     }
 
-    public function showForgotPassword(): View
+    public function showForgotPassword(): View|RedirectResponse
     {
+        if (Auth::check()) {
+            return redirect('/accueil');
+        }
+
         return view('auth.forgot-password');
     }
 

@@ -32,8 +32,8 @@ Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 // Page de garde
 Route::get('/', function () {
     return view('landing', [
-        'isAuthenticated' => session()->has('user_id'),
-        'userName' => session('user_name'),
+        'isAuthenticated' => auth()->check(),
+        'userName' => auth()->user()?->name,
     ]);
 })->name('landing');
 
@@ -58,20 +58,20 @@ Route::get('/accueil', function () {
     }
 
     return view('home', $stats);
-})->middleware('session.auth')->name('home');
+})->middleware('auth')->name('home');
 
 // Dashboard
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('session.auth');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth');
 
 // Clients
-Route::resource('clients', ClientController::class)->middleware('session.auth');
+Route::resource('clients', ClientController::class)->middleware('auth');
 
 /*
 |--------------------------------------------------------------------------
 | Projects (CRUD)
 |--------------------------------------------------------------------------
 */
-Route::resource('projects', ProjectController::class)->middleware('session.auth');
+Route::resource('projects', ProjectController::class)->middleware('auth');
 
 /*
 |--------------------------------------------------------------------------
@@ -79,4 +79,4 @@ Route::resource('projects', ProjectController::class)->middleware('session.auth'
 |--------------------------------------------------------------------------
 */
 
-Route::resource('tickets', TicketController::class)->middleware('session.auth');
+Route::resource('tickets', TicketController::class)->middleware('auth');
