@@ -98,7 +98,16 @@
                 <li>Sans ticket <span>{{ $projectsWithoutTickets }}</span></li>
                 <li>Créés ce mois <span>{{ $projectsThisMonth }}</span></li>
                 <li>Clients actifs <span>{{ $clientsWithProjects }}</span></li>
-                <li>Top client <span>{{ $topClient?->name ?? 'Aucun' }}</span></li>
+                <li>
+                    Top client
+                    <span>
+                        @if($topClient)
+                            <a href="/clients/{{ $topClient->id }}" class="dashboard-project-link">{{ $topClient->name }}</a>
+                        @else
+                            Aucun
+                        @endif
+                    </span>
+                </li>
             </ul>
         </div>
 
@@ -112,7 +121,16 @@
                 <li>Total clients <span>{{ $totalClients }}</span></li>
                 <li>Clients avec projets <span>{{ $clientsWithProjects }}</span></li>
                 <li>Clients sans projet <span>{{ $totalClients - $clientsWithProjects }}</span></li>
-                <li>Client le plus actif <span>{{ $topClient?->name ?? 'Aucun' }}</span></li>
+                <li>
+                    Client le plus actif
+                    <span>
+                        @if($topClient)
+                            <a href="/clients/{{ $topClient->id }}" class="dashboard-project-link">{{ $topClient->name }}</a>
+                        @else
+                            Aucun
+                        @endif
+                    </span>
+                </li>
             </ul>
         </div>
 
@@ -130,7 +148,7 @@
                                     {{ $project->name }}
                                 </a>
                                 @if($project->client)
-                                    - {{ $project->client->name }}
+                                    - <a href="/clients/{{ $project->client->id }}" class="dashboard-project-link">{{ $project->client->name }}</a>
                                 @endif
                             </span>
                             <span>{{ $project->tickets_count }} ticket(s)</span>
