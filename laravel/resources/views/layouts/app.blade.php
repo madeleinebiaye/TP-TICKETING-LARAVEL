@@ -28,6 +28,7 @@
             <a href="/clients">Clients</a>
             <a href="/tickets/create">Créer un ticket</a>
             <a href="/projects/create">Créer un projet</a>
+            <span class="nav-user-badge">{{ session('user_name', 'Utilisateur') }}</span>
             <form method="POST" action="/logout" class="nav-logout-form">
                 @csrf
                 <button type="submit" class="nav-logout-button">Déconnexion</button>

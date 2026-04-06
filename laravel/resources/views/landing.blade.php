@@ -26,6 +26,19 @@
         <div class="landing-hero-copy">
             <span class="landing-kicker">Page de garde</span>
             <h1>Connectez-vous pour accéder à votre espace de ticketing.</h1>
+
+            @if(session('error'))
+                <div class="landing-alert landing-alert-error">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            @if(session('success'))
+                <div class="landing-alert landing-alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
             <p>
                 Centralisez vos projets, suivez vos tickets, rattachez vos clients et gardez une vision nette de votre activité depuis une seule plateforme.
             </p>

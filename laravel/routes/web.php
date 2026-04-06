@@ -58,20 +58,20 @@ Route::get('/accueil', function () {
     }
 
     return view('home', $stats);
-})->name('home');
+})->middleware('session.auth')->name('home');
 
 // Dashboard
-Route::get('/dashboard', [DashboardController::class, 'index']);
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('session.auth');
 
 // Clients
-Route::resource('clients', ClientController::class);
+Route::resource('clients', ClientController::class)->middleware('session.auth');
 
 /*
 |--------------------------------------------------------------------------
 | Projects (CRUD)
 |--------------------------------------------------------------------------
 */
-Route::resource('projects', ProjectController::class);
+Route::resource('projects', ProjectController::class)->middleware('session.auth');
 
 /*
 |--------------------------------------------------------------------------
@@ -79,4 +79,4 @@ Route::resource('projects', ProjectController::class);
 |--------------------------------------------------------------------------
 */
 
-Route::resource('tickets', TicketController::class);
+Route::resource('tickets', TicketController::class)->middleware('session.auth');
