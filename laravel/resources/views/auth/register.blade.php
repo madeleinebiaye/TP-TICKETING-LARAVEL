@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Connexion | TP Ticketing</title>
+    <title>Créer un compte | TP Ticketing</title>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 
@@ -17,40 +17,28 @@
         </div>
         <nav class="auth-top-nav">
             <a href="/">Page de garde</a>
-            <a href="/register">S'inscrire</a>
+            <a href="/login">Se connecter</a>
         </nav>
     </div>
 </header>
 
 <main class="auth-shell">
-    <section class="auth-hero">
-        <span class="auth-kicker">Connexion</span>
-        <h1>Entrez dans votre espace de gestion.</h1>
+    <section class="auth-hero auth-hero-register">
+        <span class="auth-kicker">Inscription</span>
+        <h1>Créez votre compte et démarrez immédiatement.</h1>
         <p>
-            Retrouvez vos projets, vos tickets et vos clients dans une interface claire conçue pour suivre l'activité au quotidien.
+            Ouvrez votre accès, reliez vos projets à vos clients et commencez à suivre les demandes dans un espace centralisé.
         </p>
         <ul class="auth-benefits">
-            <li>Suivi des tickets en temps réel</li>
-            <li>Organisation des projets par client</li>
-            <li>Accès rapide aux statistiques du dashboard</li>
+            <li>Création rapide de votre espace</li>
+            <li>Accès direct à l'accueil de l'application</li>
+            <li>Navigation fluide entre projets, tickets et clients</li>
         </ul>
     </section>
 
     <section class="auth-panel-wrap">
         <div class="auth-panel">
-            <h2>Se connecter</h2>
-
-            @if(session('success'))
-                <div class="auth-alert auth-alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div class="auth-alert auth-alert-error">
-                    {{ session('error') }}
-                </div>
-            @endif
+            <h2>Créer un compte</h2>
 
             @if ($errors->any())
                 <div class="auth-alert auth-alert-error">
@@ -60,8 +48,11 @@
                 </div>
             @endif
 
-            <form method="POST" action="/login" class="auth-form">
+            <form method="POST" action="/register" class="auth-form">
                 @csrf
+
+                <label for="name">Nom</label>
+                <input type="text" id="name" name="name" value="{{ old('name') }}" required>
 
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" value="{{ old('email') }}" required>
@@ -69,15 +60,14 @@
                 <label for="password">Mot de passe</label>
                 <input type="password" id="password" name="password" required>
 
-                <div class="auth-form-meta">
-                    <a href="/forgot-password">Mot de passe oublié ?</a>
-                </div>
+                <label for="password_confirmation">Confirmer le mot de passe</label>
+                <input type="password" id="password_confirmation" name="password_confirmation" required>
 
-                <button type="submit" class="auth-submit">Se connecter</button>
+                <button type="submit" class="auth-submit">Créer mon compte</button>
             </form>
 
             <p class="auth-panel-footer">
-                Pas encore de compte ? <a href="/register">Créer un compte</a>
+                Vous avez déjà un compte ? <a href="/login">Se connecter</a>
             </p>
         </div>
     </section>

@@ -17,6 +17,8 @@ use App\Models\Ticket;
 */
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('forgot-password');
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
@@ -27,15 +29,36 @@ Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 |--------------------------------------------------------------------------
 */
 
-// Accueil
+// Page de garde
 Route::get('/', function () {
-    return view('home', [
-        'totalProjects' => Project::count(),
-        'totalTickets' => Ticket::count(),
-        'openTickets' => Ticket::where('status', 'En cours')->count(),
-        'totalClients' => Client::count(),
+    return view('landing', [
+        'isAuthenticated' => session()->has('user_id'),
+        'userName' => session('user_name'),
     ]);
-});
+})->name('landing');
+
+// Accueil applicatif
+Route::get('/accueil', function () {
+    $stats = [
+        'totalProjects' => 0,
+        'totalTickets' => 0,
+        'openTickets' => 0,
+        'totalClients' => 0,
+    ];
+
+    try {
+        $stats = [
+            'totalProjects' => Project::count(),
+            'totalTickets' => Ticket::count(),
+            'openTickets' => Ticket::where('status', 'En cours')->count(),
+            'totalClients' => Client::count(),
+        ];
+    } catch (\Throwable $exception) {
+        // L'accueil doit rester accessible meme si la base n'est pas disponible.
+    }
+
+    return view('home', $stats);
+})->name('home');
 
 // Dashboard
 Route::get('/dashboard', [DashboardController::class, 'index']);

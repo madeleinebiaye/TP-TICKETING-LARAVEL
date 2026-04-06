@@ -14,22 +14,23 @@
 
         <!-- Logo -->
         <div class="logo">
-            <a href="/">
+            <a href="/accueil">
                 <img src="{{ asset('assets/logo.png') }}" alt="Logo">
             </a>
         </div>
 
         <!-- Menu -->
-        <nav>
+        <nav class="main-nav">
+            <a href="/accueil">Accueil</a>
             <a href="/dashboard">Dashboard</a>
             <a href="/projects">Projets</a>
             <a href="/tickets">Tickets</a>
             <a href="/clients">Clients</a>
             <a href="/tickets/create">Créer un ticket</a>
             <a href="/projects/create">Créer un projet</a>
-            <form method="POST" action="/logout" style="display:inline;">
+            <form method="POST" action="/logout" class="nav-logout-form">
                 @csrf
-                <button type="submit" style="background:none;border:none;color:white;cursor:pointer;font-size:inherit;">Déconnexion</button>
+                <button type="submit" class="nav-logout-button">Déconnexion</button>
             </form>
         </nav>
 

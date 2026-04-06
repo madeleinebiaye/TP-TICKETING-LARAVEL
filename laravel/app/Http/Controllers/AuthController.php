@@ -10,9 +10,22 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function showLogin(): View
+    public function showLogin(): View|RedirectResponse
     {
+        if (session()->has('user_id')) {
+            return redirect('/accueil');
+        }
+
         return view('auth.login');
+    }
+
+    public function showRegister(): View|RedirectResponse
+    {
+        if (session()->has('user_id')) {
+            return redirect('/accueil');
+        }
+
+        return view('auth.register');
     }
 
     public function login(Request $request): RedirectResponse
@@ -31,10 +44,27 @@ class AuthController extends Controller
                 'user_email' => $user->email,
             ]);
 
-            return redirect('/dashboard');
+            return redirect('/accueil');
         }
 
         return back()->with('error', 'Email ou mot de passe incorrect.');
+    }
+
+    public function register(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        return redirect('/login')->with('success', 'Compte créé avec succès. Vous pouvez maintenant vous connecter.');
     }
 
     public function logout(Request $request): RedirectResponse
