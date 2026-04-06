@@ -24,8 +24,13 @@
             <a href="/dashboard">Dashboard</a>
             <a href="/projects">Projets</a>
             <a href="/tickets">Tickets</a>
+            <a href="/clients">Clients</a>
             <a href="/tickets/create">Créer un ticket</a>
             <a href="/projects/create">Créer un projet</a>
+            <form method="POST" action="/logout" style="display:inline;">
+                @csrf
+                <button type="submit" style="background:none;border:none;color:white;cursor:pointer;font-size:inherit;">Déconnexion</button>
+            </form>
         </nav>
 
     </div>
