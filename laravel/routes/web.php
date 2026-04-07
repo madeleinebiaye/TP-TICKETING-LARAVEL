@@ -13,7 +13,7 @@ use App\Models\Ticket;
 
 /*
 |--------------------------------------------------------------------------
-| Auth
+| Authentification
 |--------------------------------------------------------------------------
 */
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -63,7 +63,7 @@ Route::get('/accueil', function () {
     return view('home', $stats);
 })->middleware('auth')->name('home');
 
-// Dashboard
+// Tableau de bord
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth');
 
 // Clients
@@ -71,7 +71,7 @@ Route::resource('clients', ClientController::class)->middleware(['auth', 'role:a
 
 /*
 |--------------------------------------------------------------------------
-| Projects (CRUD)
+| Projets (CRUD)
 |--------------------------------------------------------------------------
 */
 Route::resource('projects', ProjectController::class)->middleware(['auth', 'role:admin,collaborateur']);
@@ -86,7 +86,7 @@ Route::resource('tickets', TicketController::class)->middleware(['auth', 'role:a
 
 /*
 |--------------------------------------------------------------------------
-| Users (Admin)
+| Utilisateurs (Admin)
 |--------------------------------------------------------------------------
 */
 Route::resource('users', UserController::class)

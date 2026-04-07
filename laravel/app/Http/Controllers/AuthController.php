@@ -52,7 +52,7 @@ class AuthController extends Controller
             $isLegacyMd5 = hash_equals((string) $user->password, md5((string) $credentials['password']));
 
             if ($isLegacyPlain || $isLegacyMd5) {
-                // Upgrade legacy password format to Laravel hash on first successful login.
+                // Migrer le mot de passe legacy vers un hash Laravel lors de la première connexion réussie.
                 $user->password = $credentials['password'];
                 $user->save();
 
