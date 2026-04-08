@@ -23,6 +23,18 @@
         </div>
 
         <div class="form-group">
+            <label for="user_id">Compte client associé</label>
+            <select id="user_id" name="user_id">
+                <option value="">-- Aucun compte associé --</option>
+                @foreach($clientUsers as $clientUser)
+                    <option value="{{ $clientUser->id }}" {{ old('user_id') == $clientUser->id ? 'selected' : '' }}>
+                        {{ $clientUser->name }} ({{ $clientUser->email }})
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="form-group">
             <label for="company">Entreprise</label>
             <input type="text" id="company" name="company" value="{{ old('company') }}">
         </div>

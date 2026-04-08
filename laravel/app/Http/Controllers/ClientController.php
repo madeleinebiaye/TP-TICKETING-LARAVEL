@@ -3,27 +3,39 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class ClientController extends Controller
 {
     public function index(): View
     {
-        $clients = Client::withCount('projects')->orderBy('name')->get();
+        $clients = Client::with('user')->withCount('projects')->orderBy('name')->get();
 
         return view('clients.index', compact('clients'));
     }
 
     public function create(): View
     {
-        return view('clients.create');
+        $clientUsers = User::query()
+            ->where('role', 'client')
+            ->orderBy('name')
+            ->get(['id', 'name', 'email']);
+
+        return view('clients.create', compact('clientUsers'));
     }
 
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
+            'user_id' => [
+                'nullable',
+                'exists:users,id',
+                Rule::unique('clients', 'user_id'),
+            ],
             'name'    => 'required|string|max:255',
             'email'   => 'nullable|email|max:255',
             'phone'   => 'nullable|string|max:50',
@@ -37,7 +49,7 @@ class ClientController extends Controller
 
     public function show(int $id): View
     {
-        $client = Client::with('projects.tickets')->findOrFail($id);
+        $client = Client::with('user', 'projects.tickets')->findOrFail($id);
 
         return view('clients.show', compact('client'));
     }
@@ -45,13 +57,22 @@ class ClientController extends Controller
     public function edit(int $id): View
     {
         $client = Client::findOrFail($id);
+        $clientUsers = User::query()
+            ->where('role', 'client')
+            ->orderBy('name')
+            ->get(['id', 'name', 'email']);
 
-        return view('clients.edit', compact('client'));
+        return view('clients.edit', compact('client', 'clientUsers'));
     }
 
     public function update(Request $request, int $id): RedirectResponse
     {
         $validated = $request->validate([
+            'user_id' => [
+                'nullable',
+                'exists:users,id',
+                Rule::unique('clients', 'user_id')->ignore($id),
+            ],
             'name'    => 'required|string|max:255',
             'email'   => 'nullable|email|max:255',
             'phone'   => 'nullable|string|max:50',

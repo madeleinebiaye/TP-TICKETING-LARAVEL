@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
 class Ticket extends Model
@@ -17,16 +18,24 @@ class Ticket extends Model
         'collaborators',
         'hours_estimated',
         'hours_spent',
+        'validation_comment',
+        'validated_at',
         'project_id',
     ];
 
     protected $casts = [
         'collaborators' => 'array',
+        'validated_at' => 'datetime',
     ];
 
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
+    }
+
+    public function timeEntries(): HasMany
+    {
+        return $this->hasMany(TimeEntry::class);
     }
 
     public function getRemainingHoursAttribute(): int
@@ -37,6 +46,15 @@ class Ticket extends Model
     public function getBillableHoursAttribute(): int
     {
         return max(0, $this->hours_spent - $this->hours_estimated);
+    }
+
+    public function refreshHoursSpentFromTimeEntries(): void
+    {
+        $minutes = (int) $this->timeEntries()->sum('duration_minutes');
+
+        // On garde le champ historique en heures pour ne pas casser l'existant.
+        $this->hours_spent = (int) ceil($minutes / 60);
+        $this->save();
     }
 
     public function getCollaboratorLabelsAttribute(): array

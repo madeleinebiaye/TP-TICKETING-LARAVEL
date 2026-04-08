@@ -54,6 +54,7 @@
                             <select name="role" style="min-width:150px;">
                                 <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>admin</option>
                                 <option value="collaborateur" {{ $user->role === 'collaborateur' ? 'selected' : '' }}>collaborateur</option>
+                                <option value="client" {{ $user->role === 'client' ? 'selected' : '' }}>client</option>
                             </select>
                             <button type="submit">Mettre à jour</button>
                         </form>

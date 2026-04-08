@@ -10,6 +10,17 @@ use Illuminate\Validation\Rule;
 
 class TicketController extends Controller
 {
+    private array $allowedStatuses = [
+        'Nouveau',
+        'En cours',
+        'En attente client',
+        'Terminé',
+        'À valider',
+        'Validé',
+        'Refusé',
+        'ouvert',
+    ];
+
     private function normalizeStatus(string $status): string
     {
         return $status === 'ouvert' ? 'Nouveau' : $status;
@@ -40,7 +51,7 @@ class TicketController extends Controller
     $validated = $request->validate([
         'title' => 'required|string|max:255',
         'description' => 'required|string',
-        'status' => 'required|in:Nouveau,En cours,Terminé,ouvert',
+        'status' => 'required|in:'.implode(',', $this->allowedStatuses),
         'type' => 'required|in:Inclus,Facturable',
         'priority' => 'nullable|in:Basse,Moyenne,Haute',
         'estimated_time' => 'nullable|integer|min:0',
@@ -50,7 +61,7 @@ class TicketController extends Controller
         'collaborators.*' => ['integer', Rule::exists('users', 'id')->where(fn ($query) => $query->whereIn('role', ['admin', 'collaborateur']))],
     ]);
 
-    Ticket::create([
+    $ticketData = [
         'title' => $validated['title'],
         'description' => $validated['description'],
         'status' => $this->normalizeStatus($validated['status']),
@@ -60,7 +71,19 @@ class TicketController extends Controller
         'hours_spent' => $validated['spent_time'] ?? 0,
         'project_id' => $validated['project_id'] ?? null,
         'collaborators' => $validated['collaborators'] ?? null,
-    ]);
+    ];
+
+    if (($ticketData['type'] ?? null) === 'Inclus' && !empty($ticketData['project_id'])) {
+        $project = Project::with('contract')->find($ticketData['project_id']);
+
+        // Petit garde-fou métier: plus d'heures incluses => ticket bascule en facturable.
+        if ($project && $project->remainingIncludedMinutes() <= 0) {
+            $ticketData['type'] = 'Facturable';
+            $ticketData['status'] = 'À valider';
+        }
+    }
+
+    Ticket::create($ticketData);
 
     return redirect('/tickets')->with('success', 'Ticket créé');
 }
@@ -68,7 +91,7 @@ class TicketController extends Controller
     // 🔍 Voir détail d’un ticket
     public function show($id)
     {
-        $ticket = Ticket::with('project')->findOrFail($id);
+        $ticket = Ticket::with(['project', 'timeEntries.user'])->findOrFail($id);
         return view('tickets.show', compact('ticket'));
     }
 
@@ -91,7 +114,7 @@ class TicketController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'status' => 'required|in:Nouveau,En cours,Terminé,ouvert',
+            'status' => 'required|in:'.implode(',', $this->allowedStatuses),
             'type' => 'required|in:Inclus,Facturable',
             'priority' => 'nullable|in:Basse,Moyenne,Haute',
             'hours_estimated' => 'nullable|integer|min:0',
@@ -103,7 +126,7 @@ class TicketController extends Controller
 
         $ticket = Ticket::findOrFail($id);
 
-        $ticket->update([
+        $ticketData = [
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
             'status' => $this->normalizeStatus($validated['status']),
@@ -113,7 +136,18 @@ class TicketController extends Controller
             'hours_spent' => $validated['hours_spent'] ?? 0,
             'project_id' => $validated['project_id'] ?? null,
             'collaborators' => $validated['collaborators'] ?? null,
-        ]);
+        ];
+
+        if (($ticketData['type'] ?? null) === 'Inclus' && !empty($ticketData['project_id'])) {
+            $project = Project::with('contract')->find($ticketData['project_id']);
+
+            if ($project && $project->remainingIncludedMinutes() <= 0) {
+                $ticketData['type'] = 'Facturable';
+                $ticketData['status'] = 'À valider';
+            }
+        }
+
+        $ticket->update($ticketData);
 
         return redirect('/tickets')->with('success', 'Ticket modifié');
     }

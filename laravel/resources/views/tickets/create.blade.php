@@ -38,7 +38,11 @@
                 <select id="status" name="status" required>
                    <option value="Nouveau" {{ old('status', 'Nouveau') == 'Nouveau' ? 'selected' : '' }}>Nouveau</option>
                    <option value="En cours" {{ old('status') == 'En cours' ? 'selected' : '' }}>En cours</option>
+                   <option value="En attente client" {{ old('status') == 'En attente client' ? 'selected' : '' }}>En attente client</option>
                    <option value="Terminé" {{ old('status') == 'Terminé' ? 'selected' : '' }}>Terminé</option>
+                   <option value="À valider" {{ old('status') == 'À valider' ? 'selected' : '' }}>À valider</option>
+                   <option value="Validé" {{ old('status') == 'Validé' ? 'selected' : '' }}>Validé</option>
+                   <option value="Refusé" {{ old('status') == 'Refusé' ? 'selected' : '' }}>Refusé</option>
                 </select>
             </div>
 
@@ -108,6 +112,10 @@
             <p>
                 Il permet également d’évaluer le temps passé et de distinguer les tâches
                 incluses du travail facturable.
+            </p>
+
+            <p>
+                Quand un ticket est facturable, le client peut ensuite le valider ou le refuser.
             </p>
 
         </aside>

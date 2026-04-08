@@ -6,6 +6,9 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ClientValidationController;
+use App\Http\Controllers\ContractController;
+use App\Http\Controllers\TimeEntryController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Models\Project;
@@ -76,6 +79,14 @@ Route::resource('clients', ClientController::class)->middleware(['auth', 'role:a
 */
 Route::resource('projects', ProjectController::class)->middleware(['auth', 'role:admin,collaborateur']);
 
+Route::get('/projects/{project}/contract/edit', [ContractController::class, 'edit'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('contracts.edit');
+
+Route::put('/projects/{project}/contract', [ContractController::class, 'update'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('contracts.update');
+
 /*
 |--------------------------------------------------------------------------
 | Tickets (CRUD)
@@ -83,6 +94,26 @@ Route::resource('projects', ProjectController::class)->middleware(['auth', 'role
 */
 
 Route::resource('tickets', TicketController::class)->middleware(['auth', 'role:admin,collaborateur']);
+
+Route::post('/tickets/{ticket}/time-entries', [TimeEntryController::class, 'store'])
+    ->middleware(['auth', 'role:admin,collaborateur'])
+    ->name('time-entries.store');
+
+Route::delete('/time-entries/{timeEntry}', [TimeEntryController::class, 'destroy'])
+    ->middleware(['auth', 'role:admin,collaborateur'])
+    ->name('time-entries.destroy');
+
+Route::get('/client/tickets', [ClientValidationController::class, 'index'])
+    ->middleware(['auth', 'role:client'])
+    ->name('client.tickets.index');
+
+Route::patch('/client/tickets/{ticket}/validate', [ClientValidationController::class, 'validateTicket'])
+    ->middleware(['auth', 'role:client'])
+    ->name('client.tickets.validate');
+
+Route::patch('/client/tickets/{ticket}/refuse', [ClientValidationController::class, 'refuseTicket'])
+    ->middleware(['auth', 'role:client'])
+    ->name('client.tickets.refuse');
 
 /*
 |--------------------------------------------------------------------------

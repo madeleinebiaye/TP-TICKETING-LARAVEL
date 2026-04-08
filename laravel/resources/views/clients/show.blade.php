@@ -19,6 +19,7 @@
         @if ($client->phone)
             <p><strong>Téléphone :</strong> {{ $client->phone }}</p>
         @endif
+        <p><strong>Compte portail client :</strong> {{ $client->user?->email ?? 'Non lié' }}</p>
 
         <h3 style="margin-top:1.5rem;">Projets associés</h3>
 

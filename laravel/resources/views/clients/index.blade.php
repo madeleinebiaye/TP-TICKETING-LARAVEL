@@ -28,6 +28,7 @@
                         <th>Entreprise</th>
                         <th>Email</th>
                         <th>Téléphone</th>
+                        <th>Compte client</th>
                         <th>Projets</th>
                         <th>Actions</th>
                     </tr>
@@ -39,6 +40,7 @@
                             <td>{{ $client->company ?? '—' }}</td>
                             <td>{{ $client->email ?? '—' }}</td>
                             <td>{{ $client->phone ?? '—' }}</td>
+                            <td>{{ $client->user?->email ?? '—' }}</td>
                             <td>{{ $client->projects_count }}</td>
                             <td>
                                 <a href="/clients/{{ $client->id }}">Voir</a>

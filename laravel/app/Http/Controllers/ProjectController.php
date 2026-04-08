@@ -43,9 +43,18 @@ class ProjectController extends Controller
 
     public function show(int $id): View
     {
-        $project = Project::with('tickets')->findOrFail($id);
+        $project = Project::with(['tickets.timeEntries', 'contract', 'client'])->findOrFail($id);
 
-        return view('projects.show', compact('project'));
+        $consumedIncludedMinutes = $project->consumedIncludedMinutes();
+        $remainingIncludedMinutes = $project->remainingIncludedMinutes();
+        $billableMinutes = $project->billableMinutes();
+
+        return view('projects.show', compact(
+            'project',
+            'consumedIncludedMinutes',
+            'remainingIncludedMinutes',
+            'billableMinutes'
+        ));
     }
 
     public function edit(int $id): View

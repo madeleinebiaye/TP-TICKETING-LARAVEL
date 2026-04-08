@@ -20,7 +20,11 @@
         <select id="status" name="status" required>
             <option value="Nouveau" {{ $ticket->status === 'Nouveau' ? 'selected' : '' }}>Nouveau</option>
             <option value="En cours" {{ $ticket->status === 'En cours' ? 'selected' : '' }}>En cours</option>
+            <option value="En attente client" {{ $ticket->status === 'En attente client' ? 'selected' : '' }}>En attente client</option>
             <option value="Terminé" {{ $ticket->status === 'Terminé' ? 'selected' : '' }}>Terminé</option>
+            <option value="À valider" {{ $ticket->status === 'À valider' ? 'selected' : '' }}>À valider</option>
+            <option value="Validé" {{ $ticket->status === 'Validé' ? 'selected' : '' }}>Validé</option>
+            <option value="Refusé" {{ $ticket->status === 'Refusé' ? 'selected' : '' }}>Refusé</option>
             @if($ticket->status === 'ouvert')
                 <option value="ouvert" selected>Ouvert (ancien)</option>
             @endif
