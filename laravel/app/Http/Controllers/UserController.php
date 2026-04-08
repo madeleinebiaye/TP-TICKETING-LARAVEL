@@ -19,7 +19,7 @@ class UserController extends Controller
     public function update(Request $request, int $id): RedirectResponse
     {
         $validated = $request->validate([
-            'role' => 'required|in:admin,collaborateur,client',
+            'role' => 'required|in:admin,collaborateur',
         ]);
 
         $user = User::findOrFail($id);

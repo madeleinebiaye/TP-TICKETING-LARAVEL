@@ -27,10 +27,10 @@
     <p><strong>Heures facturables :</strong> {{ $ticket->billable_hours }} h</p>
 
     <p><strong>Collaborateurs :</strong>
-        @if(empty($ticket->collaborators))
+        @if(empty($ticket->collaborator_labels))
             Aucun
         @else
-            {{ implode(', ', $ticket->collaborators) }}
+            {{ implode(', ', $ticket->collaborator_labels) }}
         @endif
     </p>
 

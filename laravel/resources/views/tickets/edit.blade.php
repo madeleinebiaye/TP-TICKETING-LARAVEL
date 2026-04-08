@@ -57,14 +57,15 @@
         <input type="number" id="hours_spent" name="hours_spent" min="0" value="{{ $ticket->hours_spent }}"><br><br>
 
         @php
-            $collaboratorOptions = ['Madeleine Biaye', 'Jean Dupont', 'Marie Martin', 'Paul Durand'];
-            $selectedCollaborators = $ticket->collaborators ?? [];
+            $selectedCollaborators = collect($ticket->collaborators ?? [])->map(fn ($value) => (string) $value)->all();
         @endphp
 
         <label for="collaborators">Collaborateurs</label><br>
         <select id="collaborators" name="collaborators[]" multiple>
-            @foreach($collaboratorOptions as $name)
-                <option value="{{ $name }}" {{ in_array($name, $selectedCollaborators, true) ? 'selected' : '' }}>{{ $name }}</option>
+            @foreach($collaborators as $collaborator)
+                <option value="{{ $collaborator->id }}" {{ in_array((string) $collaborator->id, $selectedCollaborators, true) ? 'selected' : '' }}>
+                    {{ $collaborator->name }} ({{ $collaborator->email }})
+                </option>
             @endforeach
         </select><br><br>
 

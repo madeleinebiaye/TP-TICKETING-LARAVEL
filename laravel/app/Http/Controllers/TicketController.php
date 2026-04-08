@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Models\Ticket;
+use App\Models\User;
+use Illuminate\Validation\Rule;
 
 class TicketController extends Controller
 {
@@ -24,7 +26,12 @@ class TicketController extends Controller
     public function create()
     {
         $projects = Project::orderBy('name')->get();
-        return view('tickets.create', compact('projects'));
+        $collaborators = User::query()
+            ->whereIn('role', ['admin', 'collaborateur'])
+            ->orderBy('name')
+            ->get(['id', 'name', 'email']);
+
+        return view('tickets.create', compact('projects', 'collaborators'));
     }
 
     // 💾 Enregistrer un ticket
@@ -40,7 +47,7 @@ class TicketController extends Controller
         'spent_time' => 'nullable|integer|min:0',
         'project_id' => 'nullable|exists:projects,id',
         'collaborators' => 'nullable|array',
-        'collaborators.*' => 'string|max:255',
+        'collaborators.*' => ['integer', Rule::exists('users', 'id')->where(fn ($query) => $query->whereIn('role', ['admin', 'collaborateur']))],
     ]);
 
     Ticket::create([
@@ -70,7 +77,12 @@ class TicketController extends Controller
     {
         $ticket = Ticket::findOrFail($id);
         $projects = Project::orderBy('name')->get();
-        return view('tickets.edit', compact('ticket', 'projects'));
+        $collaborators = User::query()
+            ->whereIn('role', ['admin', 'collaborateur'])
+            ->orderBy('name')
+            ->get(['id', 'name', 'email']);
+
+        return view('tickets.edit', compact('ticket', 'projects', 'collaborators'));
     }
 
     // 💾 Mise à jour
@@ -86,7 +98,7 @@ class TicketController extends Controller
             'hours_spent' => 'nullable|integer|min:0',
             'project_id' => 'nullable|exists:projects,id',
             'collaborators' => 'nullable|array',
-            'collaborators.*' => 'string|max:255',
+            'collaborators.*' => ['integer', Rule::exists('users', 'id')->where(fn ($query) => $query->whereIn('role', ['admin', 'collaborateur']))],
         ]);
 
         $ticket = Ticket::findOrFail($id);

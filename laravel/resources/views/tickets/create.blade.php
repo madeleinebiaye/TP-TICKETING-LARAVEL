@@ -83,10 +83,11 @@
             <div class="form-group">
                 <label for="collaborators">Collaborateurs</label>
                 <select id="collaborators" name="collaborators[]" multiple>
-                    <option value="Madeleine Biaye" {{ in_array('Madeleine Biaye', old('collaborators', [])) ? 'selected' : '' }}>Madeleine Biaye</option>
-                    <option value="Jean Dupont" {{ in_array('Jean Dupont', old('collaborators', [])) ? 'selected' : '' }}>Jean Dupont</option>
-                    <option value="Marie Martin" {{ in_array('Marie Martin', old('collaborators', [])) ? 'selected' : '' }}>Marie Martin</option>
-                    <option value="Paul Durand" {{ in_array('Paul Durand', old('collaborators', [])) ? 'selected' : '' }}>Paul Durand</option>
+                    @foreach($collaborators as $collaborator)
+                        <option value="{{ $collaborator->id }}" {{ in_array($collaborator->id, old('collaborators', [])) ? 'selected' : '' }}>
+                            {{ $collaborator->name }} ({{ $collaborator->email }})
+                        </option>
+                    @endforeach
                 </select>
             </div>
 
