@@ -2,11 +2,11 @@
 
 @section('content')
 
-<main class="ticket-create" style="margin-top:100px; width:100%;">
+<main class="ticket-create client-page" style="margin-top:100px; width:100%; max-width:none;">
 
-<div class="ticket-layout">
+<div class="ticket-layout client-layout">
 
-    <div class="ticket-form">
+    <div class="ticket-form client-main-card">
 
         <h1>Liste des clients</h1>
 
@@ -21,7 +21,8 @@
         @if($clients->isEmpty())
             <p style="margin-top:1rem;">Aucun client enregistré pour le moment.</p>
         @else
-            <table class="tickets-table" style="margin-top:1rem;">
+            <div class="client-table-wrap" style="margin-top:1rem;">
+            <table class="tickets-table client-table">
                 <thead>
                     <tr>
                         <th>Nom</th>
@@ -42,26 +43,35 @@
                             <td>{{ $client->phone ?? '—' }}</td>
                             <td>{{ $client->user?->email ?? '—' }}</td>
                             <td>{{ $client->projects_count }}</td>
-                            <td>
-                                <a href="/clients/{{ $client->id }}">Voir</a>
-                                <a href="/clients/{{ $client->id }}/edit">Modifier</a>
-                                <form method="POST" action="/clients/{{ $client->id }}" style="display:inline;">
+                            <td class="client-actions">
+                                <a class="client-link" href="/clients/{{ $client->id }}">Voir</a>
+                                <a class="client-link" href="/clients/{{ $client->id }}/edit">Modifier</a>
+                                <form method="POST" action="/clients/{{ $client->id }}" style="display:inline-flex;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit">Supprimer</button>
+                                    <button type="submit" class="client-delete-btn">Supprimer</button>
                                 </form>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+            </div>
         @endif
 
     </div>
 
-    <aside class="ticket-info-box">
+    <aside class="ticket-info-box client-side-card">
         <h2>Clients</h2>
-        <p>Gérez vos clients et consultez leurs projets associés.</p>
+        <p>
+            Cette vue centralise votre portefeuille client pour faciliter le suivi commercial et operationnel.
+        </p>
+        <ul style="margin:0.8rem 0 0 1.1rem; color:#334155; line-height:1.6;">
+            <li><strong>Vision globale:</strong> chaque fiche client regroupe les projets et les tickets associes.</li>
+            <li><strong>Communication:</strong> le compte client relie permet un dialogue plus clair sur les validations.</li>
+            <li><strong>Pilotage:</strong> vous identifiez rapidement les clients actifs et leur niveau de charge.</li>
+            <li><strong>Organisation:</strong> la liste sert de point d'entree pour prioriser les actions par client.</li>
+        </ul>
     </aside>
 
 </div>

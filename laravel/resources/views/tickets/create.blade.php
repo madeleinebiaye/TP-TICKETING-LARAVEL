@@ -110,13 +110,16 @@
             </p>
 
             <p>
-                Il permet également d’évaluer le temps passé et de distinguer les tâches
-                incluses du travail facturable.
+                Le fait de lier un ticket à un projet est essentiel, car le ticket ne vit pas seul:
+                il appartient à un projet précis, ce qui donne immédiatement son contexte.
             </p>
 
-            <p>
-                Quand un ticket est facturable, le client peut ensuite le valider ou le refuser.
-            </p>
+            <ul style="margin:0.8rem 0 0 1.1rem; color:#334155; line-height:1.6;">
+                <li><strong>Relier au client:</strong> comme le projet est lié à un client, chaque ticket est indirectement relié à ce client pour le suivi et la communication.</li>
+                <li><strong>Suivre le temps et les coûts:</strong> les heures passées sur les tickets remontent au projet pour voir rapidement les dépassements de contrat ou de budget.</li>
+                <li><strong>Organiser le travail:</strong> les tickets peuvent être regroupés, filtrés et analysés par projet, ce qui est plus lisible qu'un mélange global.</li>
+                <li><strong>Gérer le workflow métier:</strong> validation client, facturation et priorités se pilotent au niveau du projet, pas du ticket seul.</li>
+            </ul>
 
         </aside>
 
