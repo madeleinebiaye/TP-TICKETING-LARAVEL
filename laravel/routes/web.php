@@ -111,10 +111,6 @@ Route::get('/projects', [ProjectController::class, 'index'])
     ->middleware(['auth', 'role:admin,collaborateur'])
     ->name('projects.index');
 
-Route::get('/projects/{project}', [ProjectController::class, 'show'])
-    ->middleware(['auth', 'role:admin,collaborateur'])
-    ->name('projects.show');
-
 Route::get('/projects/create', [ProjectController::class, 'create'])
     ->middleware(['auth', 'role:admin'])
     ->name('projects.create');
@@ -134,6 +130,10 @@ Route::put('/projects/{project}', [ProjectController::class, 'update'])
 Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])
     ->middleware(['auth', 'role:admin'])
     ->name('projects.destroy');
+
+Route::get('/projects/{project}', [ProjectController::class, 'show'])
+    ->middleware(['auth', 'role:admin,collaborateur'])
+    ->name('projects.show');
 
 Route::get('/projects/{project}/contract/edit', [ContractController::class, 'edit'])
     ->middleware(['auth', 'role:admin'])
