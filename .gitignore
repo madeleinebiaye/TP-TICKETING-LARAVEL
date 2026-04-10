@@ -1,0 +1,3 @@
+# Root-level local artifacts (outside Laravel app folder)
+/vendor/
+/ticketing_export.sql
