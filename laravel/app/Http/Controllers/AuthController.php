@@ -72,13 +72,14 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
+            'role' => 'required|in:collaborateur,client',
         ]);
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => $validated['password'],
-            'role' => 'collaborateur',
+            'role' => $validated['role'],
         ]);
 
         Auth::login($user);

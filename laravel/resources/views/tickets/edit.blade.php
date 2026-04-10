@@ -36,6 +36,16 @@
             <option value="Facturable" {{ $ticket->type === 'Facturable' ? 'selected' : '' }}>Facturable</option>
         </select><br><br>
 
+        <label for="client_id">Client</label><br>
+        <select id="client_id" name="client_id">
+            <option value="">Sélectionner un client (optionnel)</option>
+            @foreach($clients as $client)
+                <option value="{{ $client->id }}" {{ (string) old('client_id', $selectedClientId ?? '') === (string) $client->id ? 'selected' : '' }}>
+                    {{ $client->name }}{{ $client->company ? ' ('.$client->company.')' : '' }}
+                </option>
+            @endforeach
+        </select><br><br>
+
         <label for="priority">Priorité</label><br>
         <select id="priority" name="priority">
             <option value="" {{ empty($ticket->priority) ? 'selected' : '' }}>Aucune</option>
@@ -48,7 +58,7 @@
         <select id="project_id" name="project_id">
             <option value="">Aucun</option>
             @foreach($projects as $project)
-                <option value="{{ $project->id }}" {{ (int) $ticket->project_id === (int) $project->id ? 'selected' : '' }}>
+                <option value="{{ $project->id }}" data-client-id="{{ $project->client_id }}" {{ (string) old('project_id', (string) $ticket->project_id) === (string) $project->id ? 'selected' : '' }}>
                     {{ $project->name }}
                 </option>
             @endforeach
@@ -77,5 +87,38 @@
     </form>
 
 </div>
+
+<script>
+    (function () {
+        const clientSelect = document.getElementById('client_id');
+        const projectSelect = document.getElementById('project_id');
+        if (!clientSelect || !projectSelect) return;
+
+        const options = Array.from(projectSelect.querySelectorAll('option'));
+
+        function filterProjectsByClient() {
+            const selectedClientId = clientSelect.value;
+
+            options.forEach((option) => {
+                const optionClientId = option.getAttribute('data-client-id');
+
+                if (!option.value) {
+                    option.hidden = false;
+                    return;
+                }
+
+                option.hidden = !!selectedClientId && optionClientId !== selectedClientId;
+            });
+
+            const selectedOption = projectSelect.options[projectSelect.selectedIndex];
+            if (selectedOption && selectedOption.hidden) {
+                projectSelect.value = '';
+            }
+        }
+
+        clientSelect.addEventListener('change', filterProjectsByClient);
+        filterProjectsByClient();
+    })();
+</script>
 
 @endsection

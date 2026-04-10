@@ -57,6 +57,12 @@
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" value="{{ old('email') }}" required>
 
+                <label for="role">Rôle</label>
+                <select id="role" name="role" required>
+                    <option value="collaborateur" {{ old('role', 'collaborateur') === 'collaborateur' ? 'selected' : '' }}>Collaborateur</option>
+                    <option value="client" {{ old('role') === 'client' ? 'selected' : '' }}>Client</option>
+                </select>
+
                 <label for="password">Mot de passe</label>
                 <input type="password" id="password" name="password" required>
 

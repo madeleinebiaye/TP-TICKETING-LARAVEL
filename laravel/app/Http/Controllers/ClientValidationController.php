@@ -9,6 +9,20 @@ use Illuminate\View\View;
 
 class ClientValidationController extends Controller
 {
+    public function projects(): View
+    {
+        $client = auth()->user()?->clientProfile;
+
+        abort_if(! $client, 403, 'Compte client non rattaché à une fiche client.');
+
+        $projects = $client->projects()
+            ->with(['tickets' => fn ($query) => $query->orderByDesc('updated_at')])
+            ->orderBy('name')
+            ->get();
+
+        return view('client.projects.index', compact('projects', 'client'));
+    }
+
     public function index(): View
     {
         $client = auth()->user()?->clientProfile;

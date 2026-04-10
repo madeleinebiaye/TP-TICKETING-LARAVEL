@@ -36,6 +36,10 @@
         @endif
 
         <div style="margin-top:1.5rem;">
+            <a href="/projects/create?client_id={{ $client->id }}">Créer un projet pour ce client</a>
+            &nbsp;|&nbsp;
+            <a href="/tickets/create?client_id={{ $client->id }}">Créer un ticket pour ce client</a>
+            &nbsp;|&nbsp;
             <a href="/clients/{{ $client->id }}/edit">Modifier</a>
             &nbsp;|&nbsp;
             <a href="/clients">⬅ Retour</a>

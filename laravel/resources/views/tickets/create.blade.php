@@ -65,11 +65,23 @@
             </div>
 
             <div class="form-group">
+                <label for="client_id">Client</label>
+                <select id="client_id" name="client_id">
+                    <option value="">Sélectionner un client (optionnel)</option>
+                    @foreach($clients as $client)
+                        <option value="{{ $client->id }}" {{ (string) old('client_id', $selectedClientId ?? '') === (string) $client->id ? 'selected' : '' }}>
+                            {{ $client->name }}{{ $client->company ? ' ('.$client->company.')' : '' }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="form-group">
                 <label for="project_id">Projet</label>
                 <select id="project_id" name="project_id">
                     <option value="">Aucun</option>
                     @foreach($projects as $project)
-                        <option value="{{ $project->id }}" {{ old('project_id') == $project->id ? 'selected' : '' }}>{{ $project->name }}</option>
+                        <option value="{{ $project->id }}" data-client-id="{{ $project->client_id }}" {{ old('project_id') == $project->id ? 'selected' : '' }}>{{ $project->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -126,5 +138,38 @@
     </div>
 
 </main>
+
+<script>
+    (function () {
+        const clientSelect = document.getElementById('client_id');
+        const projectSelect = document.getElementById('project_id');
+        if (!clientSelect || !projectSelect) return;
+
+        const options = Array.from(projectSelect.querySelectorAll('option'));
+
+        function filterProjectsByClient() {
+            const selectedClientId = clientSelect.value;
+
+            options.forEach((option) => {
+                const optionClientId = option.getAttribute('data-client-id');
+
+                if (!option.value) {
+                    option.hidden = false;
+                    return;
+                }
+
+                option.hidden = !!selectedClientId && optionClientId !== selectedClientId;
+            });
+
+            const selectedOption = projectSelect.options[projectSelect.selectedIndex];
+            if (selectedOption && selectedOption.hidden) {
+                projectSelect.value = '';
+            }
+        }
+
+        clientSelect.addEventListener('change', filterProjectsByClient);
+        filterProjectsByClient();
+    })();
+</script>
 
 @endsection

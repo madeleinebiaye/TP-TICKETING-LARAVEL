@@ -45,6 +45,8 @@ Route::get('/', function () {
 
 // Accueil applicatif
 Route::get('/accueil', function () {
+    $user = auth()->user();
+
     $stats = [
         'totalProjects' => 0,
         'totalTickets' => 0,
@@ -53,12 +55,27 @@ Route::get('/accueil', function () {
     ];
 
     try {
-        $stats = [
-            'totalProjects' => Project::count(),
-            'totalTickets' => Ticket::count(),
-            'openTickets' => Ticket::whereIn('status', ['Nouveau', 'En cours', 'ouvert'])->count(),
-            'totalClients' => Client::count(),
-        ];
+        if ($user?->role === 'client') {
+            $client = $user->clientProfile;
+
+            if ($client) {
+                $stats = [
+                    'totalProjects' => Project::where('client_id', $client->id)->count(),
+                    'totalTickets' => Ticket::whereHas('project', fn ($query) => $query->where('client_id', $client->id))->count(),
+                    'openTickets' => Ticket::whereIn('status', ['Nouveau', 'En cours', 'ouvert'])
+                        ->whereHas('project', fn ($query) => $query->where('client_id', $client->id))
+                        ->count(),
+                    'totalClients' => 1,
+                ];
+            }
+        } else {
+            $stats = [
+                'totalProjects' => Project::count(),
+                'totalTickets' => Ticket::count(),
+                'openTickets' => Ticket::whereIn('status', ['Nouveau', 'En cours', 'ouvert'])->count(),
+                'totalClients' => Client::count(),
+            ];
+        }
     } catch (\Throwable $exception) {
         // L'accueil doit rester accessible meme si la base n'est pas disponible.
     }
@@ -67,7 +84,7 @@ Route::get('/accueil', function () {
 })->middleware('auth')->name('home');
 
 // Tableau de bord
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'role:admin,collaborateur']);
 
 // Clients
 Route::resource('clients', ClientController::class)->middleware(['auth', 'role:admin,collaborateur']);
@@ -106,6 +123,10 @@ Route::delete('/time-entries/{timeEntry}', [TimeEntryController::class, 'destroy
 Route::get('/client/tickets', [ClientValidationController::class, 'index'])
     ->middleware(['auth', 'role:client'])
     ->name('client.tickets.index');
+
+Route::get('/client/projects', [ClientValidationController::class, 'projects'])
+    ->middleware(['auth', 'role:client'])
+    ->name('client.projects.index');
 
 Route::patch('/client/tickets/{ticket}/validate', [ClientValidationController::class, 'validateTicket'])
     ->middleware(['auth', 'role:client'])

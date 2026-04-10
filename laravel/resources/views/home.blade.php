@@ -14,8 +14,13 @@
 			</p>
 
 			<div class="home-actions">
-				<a href="/dashboard" class="home-button home-button-primary">Ouvrir le dashboard</a>
-				<a href="/tickets/create" class="home-button home-button-secondary">Créer un ticket</a>
+				@if(auth()->user()?->role === 'client')
+					<a href="{{ route('client.projects.index') }}" class="home-button home-button-primary">Voir mes projets</a>
+					<a href="{{ route('client.tickets.index') }}" class="home-button home-button-secondary">Voir mes tickets facturables</a>
+				@else
+					<a href="/dashboard" class="home-button home-button-primary">Ouvrir le dashboard</a>
+					<a href="/tickets/create" class="home-button home-button-secondary">Créer un ticket</a>
+				@endif
 			</div>
 		</div>
 
@@ -57,29 +62,43 @@
 	</section>
 
 	<section class="home-sections-grid">
-		<article class="home-feature-card">
-			<h2>Dashboard</h2>
-			<p>Consultez les indicateurs clés, les projets récents et les statistiques client.</p>
-			<a href="/dashboard">Voir le tableau de bord</a>
-		</article>
+		@if(auth()->user()?->role === 'client')
+			<article class="home-feature-card">
+				<h2>Mes projets</h2>
+				<p>Consultez uniquement vos projets, leurs tickets et le temps déjà consommé.</p>
+				<a href="{{ route('client.projects.index') }}">Accéder à mes projets</a>
+			</article>
 
-		<article class="home-feature-card">
-			<h2>Projets</h2>
-			<p>Créez des projets, rattachez-les à des clients et centralisez les tickets.</p>
-			<a href="/projects">Gérer les projets</a>
-		</article>
+			<article class="home-feature-card">
+				<h2>Tickets facturables</h2>
+				<p>Suivez l'avancement, puis validez ou refusez les tickets facturables.</p>
+				<a href="{{ route('client.tickets.index') }}">Gérer la validation</a>
+			</article>
+		@else
+			<article class="home-feature-card">
+				<h2>Dashboard</h2>
+				<p>Consultez les indicateurs clés, les projets récents et les statistiques client.</p>
+				<a href="/dashboard">Voir le tableau de bord</a>
+			</article>
 
-		<article class="home-feature-card">
-			<h2>Tickets</h2>
-			<p>Suivez les demandes, les priorités, le temps estimé et le travail facturable.</p>
-			<a href="/tickets">Voir les tickets</a>
-		</article>
+			<article class="home-feature-card">
+				<h2>Projets</h2>
+				<p>Créez des projets, rattachez-les à des clients et centralisez les tickets.</p>
+				<a href="/projects">Gérer les projets</a>
+			</article>
 
-		<article class="home-feature-card">
-			<h2>Clients</h2>
-			<p>Retrouvez les clients, leurs projets associés et l'activité qui leur est liée.</p>
-			<a href="/clients">Accéder aux clients</a>
-		</article>
+			<article class="home-feature-card">
+				<h2>Tickets</h2>
+				<p>Suivez les demandes, les priorités, le temps estimé et le travail facturable.</p>
+				<a href="/tickets">Voir les tickets</a>
+			</article>
+
+			<article class="home-feature-card">
+				<h2>Clients</h2>
+				<p>Retrouvez les clients, leurs projets associés et l'activité qui leur est liée.</p>
+				<a href="/clients">Accéder aux clients</a>
+			</article>
+		@endif
 	</section>
 
 </main>

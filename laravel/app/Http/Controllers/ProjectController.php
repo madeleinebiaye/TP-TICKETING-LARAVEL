@@ -17,11 +17,12 @@ class ProjectController extends Controller
         return view('projects.index', compact('projects'));
     }
 
-    public function create(): View
+    public function create(Request $request): View
     {
         $clients = Client::orderBy('name')->get();
+        $selectedClientId = $request->integer('client_id') ?: null;
 
-        return view('projects.create', compact('clients'));
+        return view('projects.create', compact('clients', 'selectedClientId'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -29,13 +30,13 @@ class ProjectController extends Controller
         $validated = $request->validate([
             'title'       => 'required|string|max:255',
             'description' => 'required|string',
-            'client_id'   => 'nullable|exists:clients,id',
+            'client_id'   => 'required|exists:clients,id',
         ]);
 
         Project::create([
             'name'        => $validated['title'],
             'description' => $validated['description'],
-            'client_id'   => $validated['client_id'] ?? null,
+            'client_id'   => $validated['client_id'],
         ]);
 
         return redirect('/projects')->with('success', 'Projet créé');
@@ -70,7 +71,7 @@ class ProjectController extends Controller
         $validated = $request->validate([
             'title'       => 'required|string|max:255',
             'description' => 'required|string',
-            'client_id'   => 'nullable|exists:clients,id',
+            'client_id'   => 'required|exists:clients,id',
         ]);
 
         $project = Project::findOrFail($id);
@@ -78,7 +79,7 @@ class ProjectController extends Controller
         $project->update([
             'name'        => $validated['title'],
             'description' => $validated['description'],
-            'client_id'   => $validated['client_id'] ?? null,
+            'client_id'   => $validated['client_id'],
         ]);
 
         return redirect('/projects')->with('success', 'Projet modifié');

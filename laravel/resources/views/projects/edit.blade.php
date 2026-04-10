@@ -34,8 +34,8 @@
         <!-- CLIENT -->
         <div class="form-group">
             <label for="client_id">Client</label>
-            <select id="client_id" name="client_id">
-                <option value="">— Aucun client —</option>
+            <select id="client_id" name="client_id" required>
+                <option value="">— Sélectionner un client —</option>
                 @foreach($clients as $client)
                     <option value="{{ $client->id }}" {{ $project->client_id == $client->id ? 'selected' : '' }}>
                         {{ $client->name }}{{ $client->company ? ' ('.$client->company.')' : '' }}

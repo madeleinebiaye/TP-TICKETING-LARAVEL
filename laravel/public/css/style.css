@@ -125,6 +125,35 @@ input {
     font-weight: 700;
 }
 
+.nav-role-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    border: 1px solid transparent;
+}
+
+.nav-role-badge-admin {
+    background: rgba(255, 224, 130, 0.25);
+    color: #fff8e1;
+    border-color: rgba(255, 224, 130, 0.6);
+}
+
+.nav-role-badge-collaborateur {
+    background: rgba(167, 243, 208, 0.2);
+    color: #d1fae5;
+    border-color: rgba(167, 243, 208, 0.6);
+}
+
+.nav-role-badge-client {
+    background: rgba(147, 197, 253, 0.24);
+    color: #dbeafe;
+    border-color: rgba(147, 197, 253, 0.6);
+}
+
 .nav-logout-button {
     background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.55);

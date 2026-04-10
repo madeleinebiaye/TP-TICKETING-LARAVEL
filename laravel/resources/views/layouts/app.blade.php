@@ -22,16 +22,28 @@
         <!-- Menu -->
         <nav class="main-nav">
             <a href="/accueil">Accueil</a>
-            <a href="/dashboard">Dashboard</a>
-            <a href="/projects">Projets</a>
-            <a href="/tickets">Tickets</a>
-            <a href="/clients">Clients</a>
-            <a href="/tickets/create">Créer un ticket</a>
-            <a href="/projects/create">Créer un projet</a>
-            @if(auth()->user()?->role === 'admin')
-                <a href="/users">Utilisateurs</a>
+            @if(auth()->user()?->role === 'client')
+                <a href="{{ route('client.projects.index') }}">Mes projets</a>
+                <a href="{{ route('client.tickets.index') }}">Tickets facturables</a>
+            @else
+                <a href="/dashboard">Dashboard</a>
+                <a href="/projects">Projets</a>
+                <a href="/tickets">Tickets</a>
+                <a href="/clients">Clients</a>
+                <a href="/tickets/create">Créer un ticket</a>
+                <a href="/projects/create">Créer un projet</a>
+                @if(auth()->user()?->role === 'admin')
+                    <a href="/users">Utilisateurs</a>
+                @endif
             @endif
-            <span class="nav-user-badge">{{ auth()->user()?->name ?? 'Utilisateur' }} ({{ auth()->user()?->role ?? 'N/A' }})</span>
+
+            @php
+                $currentRole = auth()->user()?->role ?? 'inconnu';
+            @endphp
+
+            <span class="nav-user-badge">{{ auth()->user()?->name ?? 'Utilisateur' }}</span>
+            <span class="nav-role-badge nav-role-badge-{{ $currentRole }}">{{ ucfirst($currentRole) }}</span>
+
             <form method="POST" action="/logout" class="nav-logout-form">
                 @csrf
                 <button type="submit" class="nav-logout-button">Déconnexion</button>

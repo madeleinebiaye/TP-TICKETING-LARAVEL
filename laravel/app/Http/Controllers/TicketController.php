@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Client;
 use App\Models\Project;
 use App\Models\Ticket;
 use App\Models\User;
@@ -36,13 +37,16 @@ class TicketController extends Controller
     // 📄 Formulaire de création
     public function create()
     {
-        $projects = Project::orderBy('name')->get();
+        $selectedClientId = request()->integer('client_id') ?: null;
+
+        $clients = Client::orderBy('name')->get(['id', 'name', 'company']);
+        $projects = Project::orderBy('name')->get(['id', 'name', 'client_id']);
         $collaborators = User::query()
             ->whereIn('role', ['admin', 'collaborateur'])
             ->orderBy('name')
             ->get(['id', 'name', 'email']);
 
-        return view('tickets.create', compact('projects', 'collaborators'));
+        return view('tickets.create', compact('clients', 'projects', 'collaborators', 'selectedClientId'));
     }
 
     // 💾 Enregistrer un ticket
@@ -56,10 +60,23 @@ class TicketController extends Controller
         'priority' => 'nullable|in:Basse,Moyenne,Haute',
         'estimated_time' => 'nullable|integer|min:0',
         'spent_time' => 'nullable|integer|min:0',
+        'client_id' => 'nullable|exists:clients,id',
         'project_id' => 'nullable|exists:projects,id',
         'collaborators' => 'nullable|array',
         'collaborators.*' => ['integer', Rule::exists('users', 'id')->where(fn ($query) => $query->whereIn('role', ['admin', 'collaborateur']))],
     ]);
+
+    if (!empty($validated['project_id']) && !empty($validated['client_id'])) {
+        $projectBelongsToClient = Project::whereKey((int) $validated['project_id'])
+            ->where('client_id', (int) $validated['client_id'])
+            ->exists();
+
+        if (! $projectBelongsToClient) {
+            return back()->withErrors([
+                'project_id' => 'Le projet sélectionné ne correspond pas au client choisi.',
+            ])->withInput();
+        }
+    }
 
     $ticketData = [
         'title' => $validated['title'],
@@ -99,13 +116,16 @@ class TicketController extends Controller
     public function edit($id)
     {
         $ticket = Ticket::findOrFail($id);
-        $projects = Project::orderBy('name')->get();
+        $clients = Client::orderBy('name')->get(['id', 'name', 'company']);
+        $projects = Project::orderBy('name')->get(['id', 'name', 'client_id']);
         $collaborators = User::query()
             ->whereIn('role', ['admin', 'collaborateur'])
             ->orderBy('name')
             ->get(['id', 'name', 'email']);
 
-        return view('tickets.edit', compact('ticket', 'projects', 'collaborators'));
+        $selectedClientId = $ticket->project?->client_id;
+
+        return view('tickets.edit', compact('ticket', 'clients', 'projects', 'collaborators', 'selectedClientId'));
     }
 
     // 💾 Mise à jour
@@ -119,10 +139,23 @@ class TicketController extends Controller
             'priority' => 'nullable|in:Basse,Moyenne,Haute',
             'hours_estimated' => 'nullable|integer|min:0',
             'hours_spent' => 'nullable|integer|min:0',
+            'client_id' => 'nullable|exists:clients,id',
             'project_id' => 'nullable|exists:projects,id',
             'collaborators' => 'nullable|array',
             'collaborators.*' => ['integer', Rule::exists('users', 'id')->where(fn ($query) => $query->whereIn('role', ['admin', 'collaborateur']))],
         ]);
+
+        if (!empty($validated['project_id']) && !empty($validated['client_id'])) {
+            $projectBelongsToClient = Project::whereKey((int) $validated['project_id'])
+                ->where('client_id', (int) $validated['client_id'])
+                ->exists();
+
+            if (! $projectBelongsToClient) {
+                return back()->withErrors([
+                    'project_id' => 'Le projet sélectionné ne correspond pas au client choisi.',
+                ])->withInput();
+            }
+        }
 
         $ticket = Ticket::findOrFail($id);
 
