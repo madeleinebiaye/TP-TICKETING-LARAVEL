@@ -11,6 +11,7 @@ use App\Http\Controllers\ContractController;
 use App\Http\Controllers\TimeEntryController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SettingsController;
 use App\Models\Project;
 use App\Models\Ticket;
 
@@ -28,6 +29,18 @@ Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->n
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::get('/reset-password/{token}', [AuthController::class, 'showResetPassword'])->name('password.reset');
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
+
+Route::get('/parametres', [SettingsController::class, 'edit'])
+    ->middleware('auth')
+    ->name('settings.edit');
+
+Route::put('/parametres/profil', [SettingsController::class, 'updateProfile'])
+    ->middleware('auth')
+    ->name('settings.profile.update');
+
+Route::put('/parametres/mot-de-passe', [SettingsController::class, 'updatePassword'])
+    ->middleware('auth')
+    ->name('settings.password.update');
 
 /*
 |--------------------------------------------------------------------------
@@ -84,17 +97,43 @@ Route::get('/accueil', function () {
 })->middleware('auth')->name('home');
 
 // Tableau de bord
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'role:admin,collaborateur']);
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'role:admin']);
 
 // Clients
-Route::resource('clients', ClientController::class)->middleware(['auth', 'role:admin,collaborateur']);
+Route::resource('clients', ClientController::class)->middleware(['auth', 'role:admin']);
 
 /*
 |--------------------------------------------------------------------------
 | Projets (CRUD)
 |--------------------------------------------------------------------------
 */
-Route::resource('projects', ProjectController::class)->middleware(['auth', 'role:admin,collaborateur']);
+Route::get('/projects', [ProjectController::class, 'index'])
+    ->middleware(['auth', 'role:admin,collaborateur'])
+    ->name('projects.index');
+
+Route::get('/projects/{project}', [ProjectController::class, 'show'])
+    ->middleware(['auth', 'role:admin,collaborateur'])
+    ->name('projects.show');
+
+Route::get('/projects/create', [ProjectController::class, 'create'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('projects.create');
+
+Route::post('/projects', [ProjectController::class, 'store'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('projects.store');
+
+Route::get('/projects/{project}/edit', [ProjectController::class, 'edit'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('projects.edit');
+
+Route::put('/projects/{project}', [ProjectController::class, 'update'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('projects.update');
+
+Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('projects.destroy');
 
 Route::get('/projects/{project}/contract/edit', [ContractController::class, 'edit'])
     ->middleware(['auth', 'role:admin'])
@@ -110,7 +149,33 @@ Route::put('/projects/{project}/contract', [ContractController::class, 'update']
 |--------------------------------------------------------------------------
 */
 
-Route::resource('tickets', TicketController::class)->middleware(['auth', 'role:admin,collaborateur']);
+Route::get('/tickets', [TicketController::class, 'index'])
+    ->middleware(['auth', 'role:admin,collaborateur'])
+    ->name('tickets.index');
+
+Route::get('/tickets/create', [TicketController::class, 'create'])
+    ->middleware(['auth', 'role:admin,collaborateur'])
+    ->name('tickets.create');
+
+Route::post('/tickets', [TicketController::class, 'store'])
+    ->middleware(['auth', 'role:admin,collaborateur'])
+    ->name('tickets.store');
+
+Route::get('/tickets/{ticket}', [TicketController::class, 'show'])
+    ->middleware(['auth', 'role:admin,collaborateur'])
+    ->name('tickets.show');
+
+Route::get('/tickets/{ticket}/edit', [TicketController::class, 'edit'])
+    ->middleware(['auth', 'role:admin,collaborateur'])
+    ->name('tickets.edit');
+
+Route::put('/tickets/{ticket}', [TicketController::class, 'update'])
+    ->middleware(['auth', 'role:admin,collaborateur'])
+    ->name('tickets.update');
+
+Route::delete('/tickets/{ticket}', [TicketController::class, 'destroy'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('tickets.destroy');
 
 Route::post('/tickets/{ticket}/time-entries', [TimeEntryController::class, 'store'])
     ->middleware(['auth', 'role:admin,collaborateur'])

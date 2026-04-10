@@ -14,7 +14,9 @@
                 <h1 class="tickets-title" style="font-size:2rem;">Liste des projets</h1>
                 <p class="tickets-subtitle">Regroupez les tickets par projet pour garder une vision claire des priorités, des coûts et des validations.</p>
             </div>
-            <a href="/projects/create" class="tickets-header-action">Nouveau projet</a>
+            @if(auth()->user()?->role === 'admin')
+                <a href="/projects/create" class="tickets-header-action">Nouveau projet</a>
+            @endif
         </div>
 
         @if($projects->isEmpty())
@@ -30,12 +32,14 @@
 
                     <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
                         <a class="ticket-action-link" href="/projects/{{ $project->id }}">Voir</a>
-                        <a class="ticket-action-link" href="/projects/{{ $project->id }}/edit">Modifier</a>
-                        <form method="POST" action="/projects/{{ $project->id }}" style="display:inline-flex;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="client-delete-btn">Supprimer</button>
-                        </form>
+                        @if(auth()->user()?->role === 'admin')
+                            <a class="ticket-action-link" href="/projects/{{ $project->id }}/edit">Modifier</a>
+                            <form method="POST" action="/projects/{{ $project->id }}" style="display:inline-flex;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="client-delete-btn">Supprimer</button>
+                            </form>
+                        @endif
                     </div>
                 </div>
             @endforeach

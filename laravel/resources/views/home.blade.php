@@ -17,6 +17,9 @@
 				@if(auth()->user()?->role === 'client')
 					<a href="{{ route('client.projects.index') }}" class="home-button home-button-primary">Voir mes projets</a>
 					<a href="{{ route('client.tickets.index') }}" class="home-button home-button-secondary">Voir mes tickets facturables</a>
+				@elseif(auth()->user()?->role === 'collaborateur')
+					<a href="/projects" class="home-button home-button-primary">Voir mes projets assignés</a>
+					<a href="/tickets/create" class="home-button home-button-secondary">Créer un ticket</a>
 				@else
 					<a href="/dashboard" class="home-button home-button-primary">Ouvrir le dashboard</a>
 					<a href="/tickets/create" class="home-button home-button-secondary">Créer un ticket</a>
@@ -73,6 +76,18 @@
 				<h2>Tickets facturables</h2>
 				<p>Suivez l'avancement, puis validez ou refusez les tickets facturables.</p>
 				<a href="{{ route('client.tickets.index') }}">Gérer la validation</a>
+			</article>
+		@elseif(auth()->user()?->role === 'collaborateur')
+			<article class="home-feature-card">
+				<h2>Projets assignés</h2>
+				<p>Consultez uniquement les projets sur lesquels vous êtes assigné via vos tickets.</p>
+				<a href="/projects">Voir mes projets</a>
+			</article>
+
+			<article class="home-feature-card">
+				<h2>Mes tickets</h2>
+				<p>Mettez à jour le statut, le type et le temps passé sur vos tickets responsables.</p>
+				<a href="/tickets">Accéder aux tickets</a>
 			</article>
 		@else
 			<article class="home-feature-card">

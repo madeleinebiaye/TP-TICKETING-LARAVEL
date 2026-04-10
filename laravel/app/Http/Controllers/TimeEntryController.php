@@ -9,9 +9,26 @@ use Illuminate\Http\Request;
 
 class TimeEntryController extends Controller
 {
+    private function isResponsibleCollaborateurForTicket(Ticket $ticket): bool
+    {
+        if (auth()->user()?->role !== 'collaborateur') {
+            return true;
+        }
+
+        $userId = (int) auth()->id();
+
+        return collect($ticket->collaborators ?? [])
+            ->map(fn ($value) => (int) $value)
+            ->contains($userId);
+    }
+
     public function store(Request $request, int $ticketId): RedirectResponse
     {
         $ticket = Ticket::findOrFail($ticketId);
+
+        if (! $this->isResponsibleCollaborateurForTicket($ticket)) {
+            return back()->with('error', 'Vous ne pouvez enregistrer du temps que sur les tickets dont vous êtes responsable.');
+        }
 
         $validated = $request->validate([
             'entry_date' => 'required|date',

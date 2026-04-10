@@ -27,10 +27,66 @@ class TicketController extends Controller
         return $status === 'ouvert' ? 'Nouveau' : $status;
     }
 
+    private function isAdmin(): bool
+    {
+        return auth()->user()?->role === 'admin';
+    }
+
+    private function isCollaborateur(): bool
+    {
+        return auth()->user()?->role === 'collaborateur';
+    }
+
+    private function assignedProjectIdsForCollaborateur(): array
+    {
+        $userId = auth()->id();
+
+        if (! $userId) {
+            return [];
+        }
+
+        return Ticket::query()
+            ->whereNotNull('project_id')
+            ->whereJsonContains('collaborators', (int) $userId)
+            ->distinct()
+            ->pluck('project_id')
+            ->map(fn ($value) => (int) $value)
+            ->all();
+    }
+
+    private function isResponsibleCollaborateur(Ticket $ticket): bool
+    {
+        $userId = auth()->id();
+
+        if (! $userId) {
+            return false;
+        }
+
+        return collect($ticket->collaborators ?? [])
+            ->map(fn ($value) => (int) $value)
+            ->contains((int) $userId);
+    }
+
+    private function ensureCollaborateurCanAccessTicket(Ticket $ticket): void
+    {
+        if (! $this->isCollaborateur()) {
+            return;
+        }
+
+        abort_if(! $this->isResponsibleCollaborateur($ticket), 403, 'Vous ne pouvez accéder qu’aux tickets dont vous êtes responsable.');
+    }
+
     // 📄 Afficher tous les tickets
     public function index()
     {
-        $tickets = Ticket::with('project')->orderBy('id', 'desc')->get();
+        $ticketsQuery = Ticket::with('project')->orderBy('id', 'desc');
+
+        if ($this->isCollaborateur()) {
+            $ticketsQuery->whereJsonContains('collaborators', (int) auth()->id());
+        }
+
+        $tickets = $ticketsQuery->get();
+
         return view('tickets.index', compact('tickets'));
     }
 
@@ -39,8 +95,22 @@ class TicketController extends Controller
     {
         $selectedClientId = request()->integer('client_id') ?: null;
 
-        $clients = Client::orderBy('name')->get(['id', 'name', 'company']);
-        $projects = Project::orderBy('name')->get(['id', 'name', 'client_id']);
+        if ($this->isCollaborateur()) {
+            $assignedProjectIds = $this->assignedProjectIdsForCollaborateur();
+            $projects = Project::query()
+                ->whereIn('id', $assignedProjectIds === [] ? [-1] : $assignedProjectIds)
+                ->orderBy('name')
+                ->get(['id', 'name', 'client_id']);
+
+            $clients = Client::query()
+                ->whereIn('id', $projects->pluck('client_id')->filter()->unique()->values()->all())
+                ->orderBy('name')
+                ->get(['id', 'name', 'company']);
+        } else {
+            $clients = Client::orderBy('name')->get(['id', 'name', 'company']);
+            $projects = Project::orderBy('name')->get(['id', 'name', 'client_id']);
+        }
+
         $collaborators = User::query()
             ->whereIn('role', ['admin', 'collaborateur'])
             ->orderBy('name')
@@ -66,6 +136,21 @@ class TicketController extends Controller
         'collaborators.*' => ['integer', Rule::exists('users', 'id')->where(fn ($query) => $query->whereIn('role', ['admin', 'collaborateur']))],
     ]);
 
+    if ($this->isCollaborateur()) {
+        if (empty($validated['project_id'])) {
+            return back()->withErrors(['project_id' => 'Le projet est obligatoire pour un collaborateur.'])->withInput();
+        }
+
+        $assignedProjectIds = $this->assignedProjectIdsForCollaborateur();
+        if (! in_array((int) $validated['project_id'], $assignedProjectIds, true)) {
+            return back()->withErrors(['project_id' => 'Vous ne pouvez créer des tickets que sur vos projets assignés.'])->withInput();
+        }
+
+        if (in_array($validated['status'], ['Validé', 'Refusé'], true)) {
+            return back()->withErrors(['status' => 'Seul le client peut valider ou refuser un ticket facturable.'])->withInput();
+        }
+    }
+
     if (!empty($validated['project_id']) && !empty($validated['client_id'])) {
         $projectBelongsToClient = Project::whereKey((int) $validated['project_id'])
             ->where('client_id', (int) $validated['client_id'])
@@ -90,6 +175,16 @@ class TicketController extends Controller
         'collaborators' => $validated['collaborators'] ?? null,
     ];
 
+    if ($this->isCollaborateur()) {
+        $ticketData['collaborators'] = collect($validated['collaborators'] ?? [])
+            ->filter(fn ($value) => is_numeric($value))
+            ->map(fn ($value) => (int) $value)
+            ->push((int) auth()->id())
+            ->unique()
+            ->values()
+            ->all();
+    }
+
     if (($ticketData['type'] ?? null) === 'Inclus' && !empty($ticketData['project_id'])) {
         $project = Project::with('contract')->find($ticketData['project_id']);
 
@@ -109,6 +204,8 @@ class TicketController extends Controller
     public function show($id)
     {
         $ticket = Ticket::with(['project', 'timeEntries.user'])->findOrFail($id);
+        $this->ensureCollaborateurCanAccessTicket($ticket);
+
         return view('tickets.show', compact('ticket'));
     }
 
@@ -116,8 +213,24 @@ class TicketController extends Controller
     public function edit($id)
     {
         $ticket = Ticket::findOrFail($id);
-        $clients = Client::orderBy('name')->get(['id', 'name', 'company']);
-        $projects = Project::orderBy('name')->get(['id', 'name', 'client_id']);
+        $this->ensureCollaborateurCanAccessTicket($ticket);
+
+        if ($this->isCollaborateur()) {
+            $assignedProjectIds = $this->assignedProjectIdsForCollaborateur();
+            $projects = Project::query()
+                ->whereIn('id', $assignedProjectIds === [] ? [-1] : $assignedProjectIds)
+                ->orderBy('name')
+                ->get(['id', 'name', 'client_id']);
+
+            $clients = Client::query()
+                ->whereIn('id', $projects->pluck('client_id')->filter()->unique()->values()->all())
+                ->orderBy('name')
+                ->get(['id', 'name', 'company']);
+        } else {
+            $clients = Client::orderBy('name')->get(['id', 'name', 'company']);
+            $projects = Project::orderBy('name')->get(['id', 'name', 'client_id']);
+        }
+
         $collaborators = User::query()
             ->whereIn('role', ['admin', 'collaborateur'])
             ->orderBy('name')
@@ -145,6 +258,24 @@ class TicketController extends Controller
             'collaborators.*' => ['integer', Rule::exists('users', 'id')->where(fn ($query) => $query->whereIn('role', ['admin', 'collaborateur']))],
         ]);
 
+        $ticket = Ticket::findOrFail($id);
+        $this->ensureCollaborateurCanAccessTicket($ticket);
+
+        if ($this->isCollaborateur()) {
+            if (empty($validated['project_id'])) {
+                return back()->withErrors(['project_id' => 'Le projet est obligatoire pour un collaborateur.'])->withInput();
+            }
+
+            $assignedProjectIds = $this->assignedProjectIdsForCollaborateur();
+            if (! in_array((int) $validated['project_id'], $assignedProjectIds, true)) {
+                return back()->withErrors(['project_id' => 'Vous ne pouvez modifier que des tickets de vos projets assignés.'])->withInput();
+            }
+
+            if (in_array($validated['status'], ['Validé', 'Refusé'], true)) {
+                return back()->withErrors(['status' => 'Seul le client peut valider ou refuser un ticket facturable.'])->withInput();
+            }
+        }
+
         if (!empty($validated['project_id']) && !empty($validated['client_id'])) {
             $projectBelongsToClient = Project::whereKey((int) $validated['project_id'])
                 ->where('client_id', (int) $validated['client_id'])
@@ -157,8 +288,6 @@ class TicketController extends Controller
             }
         }
 
-        $ticket = Ticket::findOrFail($id);
-
         $ticketData = [
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
@@ -170,6 +299,16 @@ class TicketController extends Controller
             'project_id' => $validated['project_id'] ?? null,
             'collaborators' => $validated['collaborators'] ?? null,
         ];
+
+        if ($this->isCollaborateur()) {
+            $ticketData['collaborators'] = collect($validated['collaborators'] ?? [])
+                ->filter(fn ($value) => is_numeric($value))
+                ->map(fn ($value) => (int) $value)
+                ->push((int) auth()->id())
+                ->unique()
+                ->values()
+                ->all();
+        }
 
         if (($ticketData['type'] ?? null) === 'Inclus' && !empty($ticketData['project_id'])) {
             $project = Project::with('contract')->find($ticketData['project_id']);
@@ -188,6 +327,8 @@ class TicketController extends Controller
     // ❌ Supprimer un ticket
     public function destroy($id)
     {
+        abort_if(! $this->isAdmin(), 403, 'Seul un administrateur peut supprimer un ticket.');
+
         $ticket = Ticket::findOrFail($id);
         $ticket->delete();
 
